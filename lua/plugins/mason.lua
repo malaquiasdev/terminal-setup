@@ -41,7 +41,6 @@ return {
         "gotests",
         "gomodifytags",
         "json-to-struct",
-        "terraform-ls",
       },
     })
 
