@@ -10,7 +10,6 @@ return {
         "shellcheck",
         "shfmt",
         "typescript-language-server",
-        "css-lsp",
       })
     end,
   },
