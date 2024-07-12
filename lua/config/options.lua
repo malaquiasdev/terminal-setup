@@ -11,6 +11,7 @@ vim.opt.number = true
 vim.opt.relativenumber = false
 vim.opt.title = true
 vim.opt.autoindent = true
+vim.g.autoformat = false
 vim.opt.smartindent = true
 vim.opt.hlsearch = true
 vim.opt.backup = false
