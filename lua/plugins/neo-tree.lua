@@ -9,7 +9,7 @@ return {
   keys = {
     { "<leader>e", ":Neotree toggle float<CR>", silent = true, desc = "Float File Explorer" },
     { "<leader><tab>", ":Neotree toggle left<CR>", silent = true, desc = "Left File Explorer" },
-    { "<leader>b", ":Neotree buffers float<CR>", silent = true, desc = "Float Buffers"}
+    { "<leader>b", ":Neotree buffers float<CR>", silent = true, desc = "Float Buffers" },
   },
   config = function()
     require("neo-tree").setup({
