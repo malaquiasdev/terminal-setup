@@ -41,10 +41,10 @@ keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
 --keymap.set("n", "sv", ":vsplit", opts)
 
 -- Move window
---keymap.set("n", "sh", "<C-w>h")
---keymap.set("n", "sk", "<C-w>k")
---keymap.set("n", "sj", "<C-w>j")
---keymap.set("n", "sl", "<C-w>l")
+keymap.set("n", "<Leader><left>", "<C-w>h")
+keymap.set("n", "<Leader><up>", "<C-w>k")
+keymap.set("n", "<Leader><down>", "<C-w>j")
+keymap.set("n", "<Leader><right>", "<C-w>l")
 
 -- Resize window
 keymap.set("n", "<C-w><left>", "<C-w><")
