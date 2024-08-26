@@ -1,129 +1,133 @@
-# nvim-config
+# Terminal Setup
 
-My personal Neovim configuration
+**Note:** These are primarily meant for inspiration. I wouldn't just blindly use them. Proceed at your own risk!
 
-## Alpine Linux Setup [ish.app](https://ish.app)
+My personal terminal setup
 
-The iSH's default package repository is kind of outdated.
-So, let's use the Alpine's official edge repository.
+## MacOS Terminal Setup
 
-### Upgrade the packages:
+### Homebrew
+
 ```bash
-echo https://dl-cdn.alpinelinux.org/alpine/edge/main > /etc/apk/repositories
-echo https://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
-apk update
-apk upgrade
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### Zsh:
-```bash
-apk add zsh
-sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
-```
-
-### Nerd font:
-```bash
-apk add nerd-fonts
-```
-
-### Ripgrep:
-```bash
-apk add ripgrep
-```
-
-### Nodejs:
-```bash
-apk add nodejs 
-```
-
-### GoLang:
-```bash
-apk add go
-```
-
-### Terraform:
-```bash
-apk add terraform
-```
-
-### Fuzzy finder:
-```bash
-apk add fzf
-```
-
-### Neovim:
-```bash
-apk add neovim
-```
-
-### Fix telescope know issue:
-```bash 
-cd ~/.local/share/nvim/lazy/telescope-fzf-native.nvim && make && cd -
-```
-
-## MacOS Setup
-
-- True Color Terminal Like: [iTerm2](https://iterm2.com/)
-- [Neovim](https://neovim.io/) (Version 0.9 or Later)
-- [Nerd Font](https://www.nerdfonts.com/) - I use Meslo Nerd Font
-- [Ripgrep](https://github.com/BurntSushi/ripgrep) - For Telescope Fuzzy Finder
-- XCode Command Line Tools
-- If working with typescript/javascript and the typescript language server like me. You might need to install node/npm.
-
-If you're on mac, like me, you can install iTerm2, Neovim, Meslo Nerd Font, Ripgrep and Node with homebrew.
-
-iTerm2:
+### iTerm2
 
 ```bash
 brew install --cask iterm2
 ```
 
-Nerd font:
+### Git
 
 ```bash
-brew tap homebrew/cask-fonts
-brew install font-meslo-lg-nerd-font
+brew install git
 ```
 
-Neovim:
-
-```bash
-brew install neovim
-```
-
-Ripgrep:
-
-```bash
-brew install ripgrep
-```
-
-Node/Npm:
-
-```bash
-brew install node
-```
-
-For XCode Command Line Tools do:
+### XCode Command Line Tools
 
 ```bash
 xcode-select --install
 ```
 
-## Terminal Alias
+### zsh
 
+```bash
+brew install zsh
 ```
-alias vim=nvim
-alias kdp="kubectl describe pod"
-alias kgs="kubectl get svc"
-alias kgp="kubectl get pods"
-alias gc="git checkout"
-alias gcb="git checkout -b"
-alias gcm="git commit -m"
-alias gp="git fetch -p && git pull"
-alias gm="git merge"
-alias gr="git rebase"
-alias gb="git branch"
-alias gs="git stash"
-alias ga="git add"
-alias gps= "git push"
+
+#### Install ZSH Plugins
+
+zsh-autosuggestions:
+
+```bash
+brew install zsh-autosuggestions
 ```
+
+zsh-syntax-highlighting:
+
+```bash
+brew install zsh-syntax-highlighting
+```
+
+### Oh My Zsh
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+### PowerLevel10K Theme
+
+Install:
+
+```bash
+git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+```
+
+Update ZSH_THEME:
+
+```bash
+ZSH_THEME="powerlevel10k/powerlevel10k"
+```
+
+Reload:
+
+```bash
+source ~/.zshrc
+```
+
+Meslo Nerd Font:
+
+```bash
+brew install --cask font-meslo-for-powerlevel10k
+```
+
+Configure PowerLevel10K:
+
+```bash
+p10k configure
+```
+
+### Plugins
+
+- [ripgrep](https://github.com/BurntSushi/ripgrep)
+- [fzf](https://github.com/junegunn/fzf.git)
+- [fd](https://github.com/sharkdp/fd)
+- [fzf-git](https://github.com/junegunn/fzf-git.sh)
+- [bat](https://github.com/sharkdp/bat)
+- [delta](https://github.com/dandavison/delta)
+- [eza](https://github.com/eza-community/eza.git)
+- [tldr](https://github.com/tldr-pages/tldr)
+- [thefuck](https://github.com/nvbn/thefuck)
+
+```bash
+brew install ripgrep && brew install fzf && brew install fd && brew install bat && brew install eza && brew install tldr && brew install thefuck
+```
+
+### Import Iterm2 Profile
+
+Go to Settings -> Profiles -> Other Actions -> Import JSON Profiles
+
+## TMUX
+
+Install:
+
+```bash
+brew install tmux
+```
+
+Install tpm (tmux plugin manager):
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+Copy Configuration File
+
+- [.tmux.conf](.tmux.conf)
+
+## Neovim Setup
+
+**Note:** This is my latest config with lazy.nvim.
+
+- [.config/nvim](.config/nvim)
