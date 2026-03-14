@@ -37,6 +37,8 @@ keymap.set("n", "<tab>", ":tabnext<Return>", opts)
 keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
 
 -- Split window
+keymap.set("n", "<Leader>\\", ":vsplit<CR>", opts)
+keymap.set("n", "<Leader>-", ":split<CR>", opts)
 --keymap.set("n", "ss", ":split", opts)
 --keymap.set("n", "sv", ":vsplit", opts)
 
