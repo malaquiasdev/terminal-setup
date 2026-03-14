@@ -283,7 +283,7 @@
   },
   "Silence Bell" : false,
   "Rows" : 25,
-  "Draw Powerline Glyphs" : false,
+  "Draw Powerline Glyphs" : true,
   "Guid" : "27DB3CDB-126E-421D-9074-89C786847E76",
   "Ansi 14 Color (Dark)" : {
     "Green Component" : 0.9137254901960784,
@@ -603,7 +603,7 @@
     "Alpha Component" : 1,
     "Green Component" : 0.7607843279838562
   },
-  "Normal Font" : "MesloLGS-NF-Regular 18",
+  "Normal Font" : "JetBrainsMonoNF-Regular 16",
   "Unlimited Scrollback" : false,
   "Ansi 12 Color (Light)" : {
     "Green Component" : 0.57647058823529407,
