@@ -1,133 +1,85 @@
-# Terminal Setup
+# 🌌 Terminal Setup 2026
 
-**Note:** These are primarily meant for inspiration. I wouldn't just blindly use them. Proceed at your own risk!
+**A high-performance, aesthetically pleasing development environment.**  
+Inspired by [craftzdog/dotfiles-public](https://github.com/craftzdog/dotfiles-public), optimized for 2026 workflows.
 
-My personal terminal setup
+---
 
-## MacOS Terminal Setup
+## 🎨 Aesthetics & Interface
 
-### Homebrew
+- **Theme:** [Tokyo Night (Night variant)](https://github.com/folke/tokyonight.nvim) — Deep blues and vibrant neon accents for maximum focus.
+- **Font:** [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) — Size 16, with ligatures and Powerline glyphs enabled.
+- **Terminal:** iTerm2 with 24-bit TrueColor support (`COLORTERM=truecolor`).
 
+## 🐚 Shell (Zsh + Powerlevel10k)
+
+Managed via **Oh My Zsh**, featuring:
+- **Prompt:** [Powerlevel10k](https://github.com/romkatv/powerlevel10k) (Instant Prompt enabled & optimized).
+- **Navigation:** [Zoxide](https://github.com/ajeetdsouza/zoxide) (`z` instead of `cd`).
+- **Modern CLI Tools:**
+  - `eza` (Better `ls` with icons).
+  - `bat` (Better `cat` with syntax highlighting).
+  - `ripgrep` (`rg`) & `fd` for ultra-fast searching.
+  - `fzf` for fuzzy finding.
+  - `lazygit` for terminal-based Git TUI.
+
+## 🪟 TMUX (Modular Configuration)
+
+Located in `~/.config/tmux/` for better organization:
+- **Prefix:** `Ctrl + a` (Classic & ergonomic).
+- **UX:** Window/Pane numbering starts at **1**.
+- **Mouse:** Fully enabled with **macOS Clipboard integration** (`pbcopy`).
+- **Layouts:** Standardized splits with `|` and `-`.
+- **Popups:** `Prefix + g` opens **LazyGit** in a floating window.
+
+## ⌨️ Neovim (LazyVim / Craftzdog Style)
+
+A modern, Lua-based IDE experience:
+- **Plugin Manager:** `lazy.nvim`.
+- **Theme:** Tokyo Night (Transparent background).
+- **LSP/Treesitter:** Pre-configured for Go, Node.js, and Cloud-native development.
+
+---
+
+## 🚀 Quick Start (macOS)
+
+### 1. Requirements
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Core Tools
+brew install iterm2 git zsh tmux neovim zoxide eza bat ripgrep fd fzf lazygit
+
+# Font (Crucial for icons)
+brew install --cask font-jetbrains-mono-nerd-font
 ```
 
-### iTerm2
-
+### 2. Installation (Dotfiles)
+Clone this repo and link the configurations:
 ```bash
-brew install --cask iterm2
+git clone https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
+cd ~/terminal-setup
+
+# Link configurations
+ln -s ~/terminal-setup/.zshrc ~/.zshrc
+ln -s ~/terminal-setup/.tmux.conf ~/.tmux.conf
+mkdir -p ~/.config
+ln -s ~/terminal-setup/.config/tmux ~/.config/tmux
+ln -s ~/terminal-setup/.config/nvim ~/.config/nvim
 ```
 
-### Git
+### 3. Apply Theme
+- **iTerm2:** Go to `Settings -> Profiles -> Other Actions -> Import JSON` and select `iterm.json`.
+- **Tmux:** Press `Prefix + I` to install plugins via TPM.
 
-```bash
-brew install git
-```
+---
 
-### XCode Command Line Tools
+## ⌨️ Key Aliases
 
-```bash
-xcode-select --install
-```
+| Alias | Command |
+| --- | --- |
+| `vi` / `vim` | `nvim` |
+| `ls` | `eza --icons` |
+| `cd` | `z` |
+| `kgs` / `kgp` | `kubectl get svc/pods` |
 
-### zsh
-
-```bash
-brew install zsh
-```
-
-#### Install ZSH Plugins
-
-zsh-autosuggestions:
-
-```bash
-brew install zsh-autosuggestions
-```
-
-zsh-syntax-highlighting:
-
-```bash
-brew install zsh-syntax-highlighting
-```
-
-### Oh My Zsh
-
-```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-### PowerLevel10K Theme
-
-Install:
-
-```bash
-git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
-```
-
-Update ZSH_THEME:
-
-```bash
-ZSH_THEME="powerlevel10k/powerlevel10k"
-```
-
-Reload:
-
-```bash
-source ~/.zshrc
-```
-
-Meslo Nerd Font:
-
-```bash
-brew install --cask font-meslo-for-powerlevel10k
-```
-
-Configure PowerLevel10K:
-
-```bash
-p10k configure
-```
-
-### Plugins
-
-- [ripgrep](https://github.com/BurntSushi/ripgrep)
-- [fzf](https://github.com/junegunn/fzf.git)
-- [fd](https://github.com/sharkdp/fd)
-- [fzf-git](https://github.com/junegunn/fzf-git.sh)
-- [bat](https://github.com/sharkdp/bat)
-- [delta](https://github.com/dandavison/delta)
-- [eza](https://github.com/eza-community/eza.git)
-- [tldr](https://github.com/tldr-pages/tldr)
-- [thefuck](https://github.com/nvbn/thefuck)
-
-```bash
-brew install ripgrep && brew install fzf && brew install fd && brew install bat && brew install eza && brew install tldr && brew install thefuck
-```
-
-### Import Iterm2 Profile
-
-Go to Settings -> Profiles -> Other Actions -> Import JSON Profiles
-
-## TMUX
-
-Install:
-
-```bash
-brew install tmux
-```
-
-Install tpm (tmux plugin manager):
-
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
-
-Copy Configuration File
-
-- [.tmux.conf](.tmux.conf)
-
-## Neovim Setup
-
-**Note:** This is my latest config with lazy.nvim.
-
-- [.config/nvim](.config/nvim)
+---
+*Maintained with ❤️ by [malaquiasdev](https://github.com/malaquiasdev)*
