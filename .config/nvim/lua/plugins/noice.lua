@@ -1,17 +1,19 @@
 return {
   "folke/noice.nvim",
-  opts = function(_, opts)
-    opts.routes = opts.routes or {}
-    table.insert(opts.routes, {
-      filter = {
-        event = "lsp",
-        kind = "progress",
-        cond = function(message)
-          local client = vim.tbl_get(message.opts, "progress", "client")
-          return client == "gopls"
-        end,
+  opts = {
+    lsp = {
+      progress = {
+        enabled = false, -- Desativa completamente o progresso do LSP no noice
       },
-      opts = { skip = true },
-    })
-  end,
+    },
+    routes = {
+      {
+        filter = {
+          event = "msg_show",
+          find = "gopls",
+        },
+        opts = { skip = true },
+      },
+    },
+  },
 }
