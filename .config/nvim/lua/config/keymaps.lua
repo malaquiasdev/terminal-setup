@@ -78,3 +78,9 @@ end)
 vim.api.nvim_create_user_command("ToggleAutoformat", function()
 	require("craftzdog.lsp").toggleAutoformat()
 end, {})
+
+-- Buffers
+keymap.set("n", "<Leader>,", ":Telescope buffers<Return>", opts)
+keymap.set("n", "<S-l>", ":bnext<Return>", opts)
+keymap.set("n", "<S-h>", ":bprev<Return>", opts)
+keymap.set("n", "<Leader>bd", ":bdelete<Return>", opts)
