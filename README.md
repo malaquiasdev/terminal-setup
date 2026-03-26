@@ -65,7 +65,7 @@ cd ~/terminal-setup
 
 # Link configurations
 ln -s ~/terminal-setup/.zshrc ~/.zshrc
-ln -s ~/terminal-setup/.tmux.conf ~/.tmux.conf
+ln -s ~/terminal-setup/.config/tmux/tmux.conf ~/.tmux.conf
 mkdir -p ~/.config
 ln -s ~/terminal-setup/.config/tmux ~/.config/tmux
 ln -s ~/terminal-setup/.config/nvim ~/.config/nvim

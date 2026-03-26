@@ -1,40 +1,21 @@
-# Compiled Lua sources
-luac.out
+# OS X
+.DS_Store
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+# TMUX Plugins
+.config/tmux/plugins/*
+!.config/tmux/plugins/tpm/
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+# Logs
+logs
+*.log
+npm-debug.log*
 
-# Precompiled Headers
-*.gch
-*.pch
+# Node
+node_modules/
+dist/
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
