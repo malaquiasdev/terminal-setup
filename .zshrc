@@ -17,12 +17,22 @@ ZSH_THEME="bira"
 plugins=(
   git
   web-search
+  tmux
 #  last-working-dir
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
+
+# Smart tmux session manager
+function tm() {
+  if [[ -z "$1" ]]; then
+    tmux attach 2>/dev/null || tmux
+  else
+    tmux attach -t "$1" 2>/dev/null || tmux new -s "$1"
+  fi
+}
 
 # User configuration
 

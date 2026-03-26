@@ -27,10 +27,15 @@ Managed via **Oh My Zsh**, featuring:
 
 Located in `~/.config/tmux/` for better organization:
 - **Prefix:** `Ctrl + a` (Classic & ergonomic).
+- **Session Management:** Powered by `tmux-sessionist`.
+  - `prefix + g`: Create new session.
+  - `prefix + C`: Create session from current pane path.
+  - `prefix + X`: Kill current session (jumps to next).
+  - `prefix + S`: Toggle between last used sessions.
+- **Auto-Persistence:** `tmux-resurrect` & `tmux-continuum` save state every 15m.
 - **UX:** Window/Pane numbering starts at **1**.
 - **Mouse:** Fully enabled with **macOS Clipboard integration** (`pbcopy`).
-- **Layouts:** Standardized splits with `|` and `-`.
-- **Popups:** `Prefix + g` opens **LazyGit** in a floating window.
+- **Layouts:** Standardized splits with `\` and `-`.
 
 ## ⌨️ Neovim (LazyVim / Craftzdog Style)
 
@@ -77,6 +82,7 @@ ln -s ~/terminal-setup/.config/nvim ~/.config/nvim
 | Alias | Command |
 | --- | --- |
 | `vi` / `vim` | `nvim` |
+| `tm` | `Smart Tmux Session Manager` |
 | `ls` | `eza --icons` |
 | `cd` | `z` |
 | `kgs` / `kgp` | `kubectl get svc/pods` |
