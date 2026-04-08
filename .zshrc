@@ -1,24 +1,14 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# Tema
 ZSH_THEME="bira"
 
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
+# Plugins (Garanta que clonou os externos - veja comandos abaixo)
 plugins=(
   git
   web-search
   tmux
-#  last-working-dir
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
@@ -34,9 +24,7 @@ function tm() {
   fi
 }
 
-# User configuration
-
-## history setup
+## History setup
 HISTFILE=$HOME/.zhistory
 SAVEHIST=1000
 HISTSIZE=999
@@ -45,16 +33,25 @@ setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
 
-## completion using arrow keys (based on history)
+## Bindkeys
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
-## ---- Zoxide (better cd) ----
-eval "$(zoxide init zsh)"
+## ---- Zoxide (Melhor que cd) ----
+# Só ativa se o comando existir
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+    alias cd="z"
+fi
 
-## Set personal aliases, overriding those provided by oh-my-zsh libs,
-alias cd="z"
-alias ls="eza --icons=always"
+## Aliases
+# Só usa o eza se ele estiver instalado, senão volta pro ls padrão
+if command -v eza &> /dev/null; then
+    alias ls="eza --icons=always"
+else
+    alias ls="ls --color=auto"
+fi
+
 alias vim=nvim
 alias vi=nvim
 alias kdp="kubectl describe pod"
@@ -64,71 +61,50 @@ alias gc="git checkout"
 alias gcb="git checkout -b"
 alias gcm="git commit -m"
 alias gp="git fetch -p && git pull"
-alias gm="git merge"
-alias gr="git rebase"
-alias gb="git branch"
-alias gs="git stash"
-alias ga="git add"
-alias gps= "git push"
+alias gps="git push"
 
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-## THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
-
+## NVM (Node)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-# bun completions
-[ -s "/Users/mateusmalaquias/.bun/_bun" ] && source "/Users/mateusmalaquias/.bun/_bun"
-
-# bun
+## Bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Added by Antigravity
-export PATH="/Users/mateusmalaquias/.antigravity/antigravity/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
+## Antigravity & Local Bins
+export PATH="$HOME/.antigravity/antigravity/bin:$HOME/.local/bin:$PATH"
 
-# opencode
-export PATH=/Users/mateusmalaquias/.opencode/bin:$PATH
+## Go Path (Consertado para Linux)
+export PATH=$PATH:$(go env GOPATH)/bin
+export COLORTERM=truecolor
 
-# AWS Profile Auto-Switch
+# AWS Profile Auto-Switch (Atualizado para caminhos de Linux)
 function aws_profile_autoswitch() {
-  if [[ "$PWD" == "/Users/mateusmalaquias/Developer/rdsplus"* ]]; then
+  if [[ "$PWD" == "$HOME/Developer/rdsplus"* ]]; then
     if [[ "$AWS_PROFILE" != "rdplus-dev" ]]; then
       export AWS_PROFILE=rdplus-dev
-      [[ -n "$ZSH_NAME" && -n "$PS1" ]] && echo "AWS Profile: rdplus-dev (Auto)"
+      echo "AWS Profile: rdplus-dev (Auto)"
     fi
-  elif [[ "$PWD" == "/Users/mateusmalaquias/Developer/me"* ]]; then
+  elif [[ "$PWD" == "$HOME/Developer/me"* ]]; then
     if [[ "$AWS_PROFILE" != "malaquiasdev" ]]; then
       export AWS_PROFILE=malaquiasdev
-      [[ -n "$ZSH_NAME" && -n "$PS1" ]] && echo "AWS Profile: malaquiasdev (Auto)"
+      echo "AWS Profile: malaquiasdev (Auto)"
     fi
   elif [[ -n "$AWS_PROFILE" ]]; then
     unset AWS_PROFILE
-    [[ -n "$ZSH_NAME" && -n "$PS1" ]] && echo "AWS Profile: unset (Auto)"
   fi
 }
 
-# Add to zsh hooks
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd aws_profile_autoswitch
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Run once on startup
-aws_profile_autoswitch > /dev/null 2>&1
+# bun completions
+[ -s "/home/malaquiasdev/.bun/_bun" ] && source "/home/malaquiasdev/.bun/_bun"
 
-export PATH=$PATH:$(go env GOPATH)/bin
-export COLORTERM=truecolor
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+
+alias claude="$HOME/.local/bin/claude"

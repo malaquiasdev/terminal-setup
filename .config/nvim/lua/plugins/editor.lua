@@ -66,7 +66,7 @@ return {
 				function()
 					local builtin = require("telescope.builtin")
 					builtin.find_files({
-						no_ignore = false,
+						no_ignore = true,
 						hidden = true,
 					})
 				end,
@@ -134,23 +134,21 @@ return {
 				"sf",
 				function()
 					local telescope = require("telescope")
-
-					local function telescope_buffer_dir()
-						return vim.fn.expand("%:p:h")
-					end
+					local root = require("lazyvim.util").root()
 
 					telescope.extensions.file_browser.file_browser({
-						path = "%:p:h",
-						cwd = telescope_buffer_dir(),
+						path = root,
+						cwd = root,
 						respect_gitignore = false,
 						hidden = true,
+						no_ignore = true,
 						grouped = true,
 						previewer = false,
 						initial_mode = "normal",
 						layout_config = { height = 40 },
 					})
 				end,
-				desc = "Open File Browser with the path of the current buffer",
+				desc = "Open File Browser at project root",
 			},
 		},
 		config = function(_, opts)
@@ -158,7 +156,7 @@ return {
 			local actions = require("telescope.actions")
 			local fb_actions = require("telescope").extensions.file_browser.actions
 
-			opts.defaults = vim.tbl_deep_extend("force", opts.defaults, {
+			opts.defaults = vim.tbl_deep_extend("force", opts.defaults or {}, {
 				wrap_results = true,
 				layout_strategy = "horizontal",
 				layout_config = { prompt_position = "top" },
@@ -167,8 +165,17 @@ return {
 				mappings = {
 					n = {},
 				},
+				hidden = true,
+				no_ignore = true,
 			})
 			opts.pickers = {
+				find_files = {
+					hidden = true,
+					no_ignore = true,
+				},
+				live_grep = {
+					additional_args = { "--hidden", "--no-ignore" },
+				},
 				diagnostics = {
 					theme = "ivy",
 					initial_mode = "normal",
@@ -182,6 +189,9 @@ return {
 					theme = "dropdown",
 					-- disables netrw and use telescope-file-browser in its place
 					hijack_netrw = true,
+					hidden = true,
+					no_ignore = true,
+					respect_gitignore = false,
 					mappings = {
 						-- your custom insert mode mappings
 						["n"] = {
