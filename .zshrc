@@ -37,13 +37,6 @@ setopt hist_verify
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 
-## ---- Zoxide (Melhor que cd) ----
-# Só ativa se o comando existir
-if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init zsh)"
-    alias cd="z"
-fi
-
 ## Aliases
 # Só usa o eza se ele estiver instalado, senão volta pro ls padrão
 if command -v eza &> /dev/null; then
@@ -108,3 +101,10 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 
 alias claude="$HOME/.local/bin/claude"
+
+## ---- Zoxide (Melhor que cd) ----
+# Deve ser o ÚLTIMO item do arquivo (zoxide exige isso)
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+    alias cd="z"
+fi
