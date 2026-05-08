@@ -151,8 +151,17 @@ return {
 	},
 
 	{
-		"MeanderingProgrammer/render-markdown.nvim",
-		enabled = false,
+		"iamcco/markdown-preview.nvim",
+		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+		build = "cd app && npm install",
+		ft = { "markdown" },
+		keys = {
+			{ "<leader>m", "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle markdown preview" },
+		},
+		init = function()
+			vim.g.mkdp_filetypes = { "markdown" }
+			vim.g.mkdp_auto_close = 0
+		end,
 	},
 
 	{
