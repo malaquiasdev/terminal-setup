@@ -32,6 +32,12 @@ Located in `~/.config/tmux/` for better organization:
   - `prefix + C`: Create session from current pane path.
   - `prefix + X`: Kill current session (jumps to next).
   - `prefix + S`: Toggle between last used sessions.
+- **Preview Popup** (peek at another session/window without disturbing your client):
+  - `prefix + p`: Visual session picker → opens the selected session in a scrollable popup. *(overrides default `previous-window`)*
+  - `prefix + w`: Visual window picker → opens the selected window in a scrollable popup. *(overrides default `choose-tree`)*
+  - Navigate the picker with `j/k`, select with `Enter`. Detach the popup with `prefix + d`.
+  - Uses a grouped tmux session so closing the popup doesn't move your original client.
+  - Scroll inside with `prefix + [` (copy-mode) or the mouse wheel. Note: typing here affects the shared pane, since the popup shares the live windows.
 - **Auto-Persistence:** `tmux-resurrect` & `tmux-continuum` save state every 15m.
 - **UX:** Window/Pane numbering starts at **1**.
 - **Mouse:** Fully enabled with **macOS Clipboard integration** (`pbcopy`).
