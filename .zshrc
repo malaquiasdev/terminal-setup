@@ -69,7 +69,11 @@ alias gr="git rebase"
 alias gb="git branch"
 alias gs="git stash"
 alias ga="git add"
-alias gps= "git push"
+alias gps="git push"
+alias tls="tmux ls"
+alias tk="tmux kill-session -t"
+alias claude-pessoal="claude auth logout && claude auth login --email malaquias@rdplus.com.br"
+alias claude-pbsf="claude auth logout && claude auth login --email mateus.malaquias@pbsf.com.br"
 
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -123,12 +127,37 @@ function aws_profile_autoswitch() {
   fi
 }
 
+# Claude Account Hint
+function claude_account_hint() {
+  if [[ "$PWD" == "/Users/mateusmalaquias/Developer/pbsf"* ]]; then
+    if [[ "$CLAUDE_EXPECTED_ACCOUNT" != "pbsf" ]]; then
+      export CLAUDE_EXPECTED_ACCOUNT="pbsf"
+      [[ -n "$PS1" ]] && echo "Claude: use 'claude-pbsf' para logar com mateus.malaquias@pbsf.com.br"
+    fi
+  elif [[ "$PWD" == "/Users/mateusmalaquias/Developer/me"* ]] ||
+       [[ "$PWD" == "/Users/mateusmalaquias/Developer/rdsplus"* ]] ||
+       [[ "$PWD" == "/Users/mateusmalaquias/Developer/ekoa"* ]] ||
+       [[ "$PWD" == "/Users/mateusmalaquias/Developer/gl"* ]] ||
+       [[ "$PWD" == "/Users/mateusmalaquias/Developer/srs"* ]]; then
+    if [[ "$CLAUDE_EXPECTED_ACCOUNT" != "pessoal" ]]; then
+      export CLAUDE_EXPECTED_ACCOUNT="pessoal"
+      [[ -n "$PS1" ]] && echo "Claude: use 'claude-pessoal' para logar com malaquias@rdplus.com.br"
+    fi
+  elif [[ -n "$CLAUDE_EXPECTED_ACCOUNT" ]]; then
+    unset CLAUDE_EXPECTED_ACCOUNT
+  fi
+}
+
 # Add to zsh hooks
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd aws_profile_autoswitch
+add-zsh-hook chpwd claude_account_hint
 
-# Run once on startup
+# Run once on startup (silenced to keep Powerlevel10k instant prompt clean)
 aws_profile_autoswitch > /dev/null 2>&1
+claude_account_hint > /dev/null 2>&1
 
 export PATH=$PATH:$(go env GOPATH)/bin
 export COLORTERM=truecolor
+
+. "$HOME/.cargo/env"
