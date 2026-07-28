@@ -74,7 +74,6 @@ tm() {
 }
 
 # --- Prompt (Clean Standalone Fallback) ---
-# If Oh My ZSH / P10k is installed, load it, otherwise use robust built-in prompt
 if [ -d "$HOME/.oh-my-zsh" ]; then
   export ZSH="$HOME/.oh-my-zsh"
   ZSH_THEME="robbyrussell"

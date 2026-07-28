@@ -1,12 +1,20 @@
-# 🪟 TMUX Setup (Ghostty Edition)
+# 🪟 TMUX Configuration
 
 A self-contained **TMUX** configuration focused on high performance, ergonomics, and seamless compatibility with the **Ghostty** terminal, requiring zero third-party plugin downloads or network connectivity.
 
 ---
 
+## 🛠️ Installation
+
+```bash
+ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
+```
+
+---
+
 ## ⚡ Quick Keybindings Reference
 
-The primary prefix key is **`Ctrl + a`**.
+Primary Prefix: **`Ctrl + a`**
 
 ### 1. Pane Management
 
@@ -30,8 +38,6 @@ The primary prefix key is **`Ctrl + a`**.
 ---
 
 ## 📋 Copy Mode & System Clipboard (Vi-Mode)
-
-Copy and navigation modes use standard **Vim** keybindings:
 
 1. Press **`Ctrl + a` + `[`** to enter copy/scroll mode.
 2. Navigate using `h`, `j`, `k`, `l` (or mouse wheel).

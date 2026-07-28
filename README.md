@@ -1,56 +1,58 @@
-# 👻 Ghostty + Vim + TMUX Setup (Restricted Environment Edition)
+# 👻 Ghostty + Vim + TMUX + ZSH Setup (Modular Edition)
 
-**A lightweight, zero-external-dependency terminal setup optimized for restricted corporate environments, firewalls, and proxy networks.**
-
----
-
-## 🔒 Designed for Restricted Environments
-- **Zero Online Plugin Dependencies:** TMUX and Vim function completely out-of-the-box without needing `git clone` or online plugin managers (TPM / lazy.nvim) during runtime.
-- **No Directory Prerequisites:** `.tmux.conf`, `.vimrc`, and `.zshrc` work directly out of the root without requiring pre-created `~/.config/tmux` directories.
-- **Proxy Aware:** Pre-built Zsh helper functions (`setproxy`, `unsetproxy`, `showproxy`).
-- **Tool Fallbacks:** Graceful degradation if modern CLI tools (`eza`, `bat`, `ripgrep`, `nvim`) cannot be installed due to lack of admin permissions.
+**A modular, zero-external-dependency terminal setup organized by application for restricted corporate environments, firewalls, and proxy networks.**
 
 ---
 
-## 🛠️ Stack Overview
+## 📂 Repository Structure
 
-| Component | Target Tool | Configuration Path | Notes |
-| --- | --- | --- | --- |
-| **Terminal** | [Ghostty](https://github.com/ghostty-org/ghostty) | `.config/ghostty/config` | TokyoNight theme, TrueColor, JetBrainsMono font |
-| **Editor** | Vim / Neovim | `.vimrc` | Native statusline, netrw explorer, vi keybindings |
-| **Multiplexer** | TMUX | `.tmux.conf` | `Ctrl+a` prefix, TokyoNight status bar, OS clipboard |
-| **Shell** | ZSH | `.zshrc` | Proxy management, user-space `$PATH`, resilience fallbacks |
+Each application is self-contained within its own subfolder, containing its specific configuration file and documentation:
+
+```text
+.
+├── ghostty/
+│   ├── config        # Native Ghostty configuration
+│   └── README.md     # Ghostty documentation & keybindings
+├── tmux/
+│   ├── tmux.conf     # Standalone TMUX configuration
+│   └── README.md     # TMUX documentation & keybindings
+├── vim/
+│   ├── vimrc         # Self-contained Vim / Neovim configuration
+│   └── README.md     # Vim documentation & keybindings
+├── zsh/
+│   ├── zshrc         # Resilient ZSH shell configuration & proxy helpers
+│   └── README.md     # ZSH documentation & functions
+└── README.md         # Repository root overview
+```
 
 ---
 
 ## 🚀 Quick Setup
 
-### 1. Link Configurations
+To install all components on a new machine, clone the repository and create the symlinks:
+
 ```bash
+git clone -b ghostty-vim-tmux https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
 cd ~/terminal-setup
 
-# Standalone symlinks (No ~/.config/tmux required!)
-ln -sf ~/terminal-setup/.tmux.conf ~/.tmux.conf
-ln -sf ~/terminal-setup/.vimrc ~/.vimrc
-ln -sf ~/terminal-setup/.zshrc ~/.zshrc
+# Link application configurations
+ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
+ln -sf ~/terminal-setup/vim/vimrc ~/.vimrc
+ln -sf ~/terminal-setup/zsh/zshrc ~/.zshrc
 
 # Ghostty configuration (if Ghostty is installed)
 mkdir -p ~/.config/ghostty
-ln -sf ~/terminal-setup/.config/ghostty/config ~/.config/ghostty/config
-```
-
-### 2. Corporate Proxy Management (Zsh)
-Configure network proxies on demand:
-```bash
-setproxy http://proxy.company.com:8080
-showproxy
-unsetproxy
+ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
 ```
 
 ---
 
-## 📖 Documentation
-- [TMUX Keybindings & Features](file:///Users/mateusmalaquias/Developer/me/terminal-setup/TMUX.md)
+## 📖 Component Documentation
+
+- 👻 [Ghostty Config & Setup](ghostty/README.md)
+- 🪟 [TMUX Config & Keybindings](tmux/README.md)
+- ⌨️ [Vim Config & Keybindings](vim/README.md)
+- 🐚 [ZSH Config & Proxy Helpers](zsh/README.md)
 
 ---
 *Branch: `ghostty-vim-tmux`*
