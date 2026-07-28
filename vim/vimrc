@@ -110,7 +110,7 @@ nnoremap <Leader>ff :find
 nnoremap <Leader>fg :grep! 
 
 " <Leader>fw: Grep word under cursor across project
-nnoremap <Leader>fw :grep! <cword><CR>:copen<CR>
+nnoremap <Leader>fw :grep! <cword><CR>
 
 " Quickfix Window Navigation (for grep results)
 nnoremap <Leader>co :copen<CR>
@@ -145,4 +145,6 @@ augroup CustomAutocmds
   " Highlight line on active window
   autocmd WinEnter * set cursorline
   autocmd WinLeave * set nocursorline
+  " Automatically open Quickfix window when grep finds matches
+  autocmd QuickFixCmdPost [^l]* cwindow
 augroup END
