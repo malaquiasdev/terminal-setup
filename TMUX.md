@@ -1,52 +1,52 @@
 # 🪟 TMUX Setup (Ghostty Edition)
 
-Uma configuração do **TMUX** autônoma (*self-contained*), focada em performance, usabilidade e compatibilidade com o terminal **Ghostty**, sem exigir downloads de plugins de terceiros ou conexão com a internet.
+A self-contained **TMUX** configuration focused on high performance, ergonomics, and seamless compatibility with the **Ghostty** terminal, requiring zero third-party plugin downloads or network connectivity.
 
 ---
 
-## ⚡ Guia Rápido de Atalhos
+## ⚡ Quick Keybindings Reference
 
-O caractere de prefixo principal é **`Ctrl + a`**.
+The primary prefix key is **`Ctrl + a`**.
 
-### 1. Gestão de Painéis (Panes)
+### 1. Pane Management
 
-| Atalho | Ação |
+| Shortcut | Action |
 | --- | --- |
-| `Ctrl + a` depois `\` | Divide a janela verticalmente (lado a lado), mantendo a pasta atual |
-| `Ctrl + a` depois `-` | Divide a janela horizontalmente (em cima/em baixo), mantendo a pasta atual |
-| `Ctrl + a` depois `h` | Move o foco para o painel da **esquerda** |
-| `Ctrl + a` depois `j` | Move o foco para o painel de **baixo** |
-| `Ctrl + a` depois `k` | Move o foco para o painel de **cima** |
-| `Ctrl + a` depois `l` | Move o foco para o painel da **direita** |
+| `Ctrl + a` then `\` | Split window vertically (side-by-side), preserving current path |
+| `Ctrl + a` then `-` | Split window horizontally (top/bottom), preserving current path |
+| `Ctrl + a` then `h` | Focus pane to the **left** |
+| `Ctrl + a` then `j` | Focus pane **below** |
+| `Ctrl + a` then `k` | Focus pane **above** |
+| `Ctrl + a` then `l` | Focus pane to the **right** |
 
-### 2. Gestão de Janelas (Windows) & Sessão
+### 2. Window & Session Management
 
-| Atalho | Ação |
+| Shortcut | Action |
 | --- | --- |
-| `Ctrl + a` depois `c` | Cria uma nova janela no diretório atual |
-| `Ctrl + a` depois `1`..`9` | Alterna para a janela de número correspondente |
-| `Ctrl + a` depois `r` | Recarrega as configurações do `~/.tmux.conf` |
+| `Ctrl + a` then `c` | Create a new window in current path |
+| `Ctrl + a` then `1`..`9` | Switch to corresponding window number |
+| `Ctrl + a` then `r` | Reload configuration from `~/.tmux.conf` |
 
 ---
 
-## 📋 Modo de Cópia & Área de Transferência (Vi-Mode)
+## 📋 Copy Mode & System Clipboard (Vi-Mode)
 
-O modo de visualização/cópia utiliza os atalhos clássicos do **Vim**:
+Copy and navigation modes use standard **Vim** keybindings:
 
-1. Pressione **`Ctrl + a` + `[`** para entrar no modo de navegação.
-2. Navegue usando as teclas `h`, `j`, `k`, `l` (ou a roda do mouse).
-3. Pressione **`v`** para iniciar a seleção de texto.
-4. Pressione **`y`** para copiar o texto selecionado para a área de transferência do sistema operacional.
+1. Press **`Ctrl + a` + `[`** to enter copy/scroll mode.
+2. Navigate using `h`, `j`, `k`, `l` (or mouse wheel).
+3. Press **`v`** to start visual text selection.
+4. Press **`y`** to yank selected text directly into the host system clipboard.
 
-> **Suporte Automático de Clipboard por Sistema:**
-> - **macOS:** Envia o texto copiado para o `pbcopy`.
-> - **Windows (WSL2):** Envia o texto copiado para o `clip.exe`.
-> - **Linux:** Envia o texto copiado para o `xclip`.
+> **Automatic OS Clipboard Integration:**
+> - **macOS:** Pipes copied selection to `pbcopy`.
+> - **Windows (WSL2):** Pipes copied selection to `clip.exe`.
+> - **Linux:** Pipes copied selection to `xclip`.
 
 ---
 
-## 🎨 Interface Visual (Tokyo Night)
+## 🎨 Interface & Styling (Tokyo Night)
 
-- **Suporte TrueColor 24-bit:** Habilitado para renderização perfeita no Ghostty (`COLORTERM=truecolor`).
-- **Barra de Status (Topo):** Exibe o nome da sessão ativa à esquerda, a lista de janelas abertas ao centro, e a data, hora e hostname à direita.
-- **Suporte a Mouse:** Totalmente ativado (clique para alternar painéis, arraste para redimensionar e scroll para rolar o histórico).
+- **24-bit TrueColor Support:** Enabled for crisp color rendering in Ghostty (`COLORTERM=truecolor`).
+- **Top Status Bar:** Displays active session name on the left, open window list in the center, and date, time, and hostname on the right.
+- **Mouse Support:** Fully enabled (click to switch panes, drag to resize, wheel to scroll history).

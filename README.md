@@ -29,7 +29,7 @@
 ```bash
 cd ~/terminal-setup
 
-# Simple standalone symlinks (No ~/.config/tmux required!)
+# Standalone symlinks (No ~/.config/tmux required!)
 ln -sf ~/terminal-setup/.tmux.conf ~/.tmux.conf
 ln -sf ~/terminal-setup/.vimrc ~/.vimrc
 ln -sf ~/terminal-setup/.zshrc ~/.zshrc
@@ -46,6 +46,11 @@ setproxy http://proxy.company.com:8080
 showproxy
 unsetproxy
 ```
+
+---
+
+## 📖 Documentation
+- [TMUX Keybindings & Features](file:///Users/mateusmalaquias/Developer/me/terminal-setup/TMUX.md)
 
 ---
 *Branch: `ghostty-vim-tmux`*
