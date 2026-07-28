@@ -1,35 +1,50 @@
-# 👻 Ghostty + Vim + TMUX + ZSH Setup (Modular Edition)
+# 🌌 Terminal Setup — Ghostty + Vim + TMUX (Gruvbox Edition)
 
-**A modular, zero-external-dependency terminal setup organized by application for restricted corporate environments, firewalls, and proxy networks.**
+**A high-performance, aesthetically pleasing, zero-dependency development environment optimized for restricted corporate environments, firewalls, and proxy networks.**
 
 ---
 
-## 📂 Repository Structure
+## 🎨 Aesthetics & Stack
 
-Each application is self-contained within its own subfolder, containing its specific configuration file and documentation:
+- **Theme:** [Gruvbox Dark](https://github.com/morhetz/gruvbox) — Earthy, warm palette designed for high legibility during long coding sessions.
+- **Font:** [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) (Size 15) with fallback monospace fonts.
+- **Terminal:** [Ghostty](https://github.com/ghostty-org/ghostty) with 24-bit TrueColor support (`COLORTERM=truecolor`).
+- **Multiplexer:** TMUX (Standalone, zero-TPM runtime dependency).
+- **Editor:** Vim 8+ / Neovim (Pure Vim config, offline themes & TypeScript support).
+- **Shell:** ZSH (Native `compinit` autocomplete, autosuggestions, syntax-highlighting & proxy helpers).
+
+---
+
+## 📂 Modular Repository Architecture
+
+Each tool is isolated in its dedicated directory containing configuration files and individual documentation:
 
 ```text
 .
 ├── ghostty/
-│   ├── config        # Native Ghostty configuration
+│   ├── config        # Native Ghostty configuration (Gruvbox Dark)
 │   └── README.md     # Ghostty documentation & keybindings
 ├── tmux/
-│   ├── tmux.conf     # Standalone TMUX configuration
-│   └── README.md     # TMUX documentation & keybindings
+│   ├── tmux.conf     # Standalone TMUX configuration (Gruvbox status bar)
+│   ├── preview.sh    # Floating preview popup script
+│   └── README.md     # TMUX keybindings & preview popup guide
 ├── vim/
-│   ├── vimrc         # Self-contained Vim / Neovim configuration
-│   └── README.md     # Vim documentation & keybindings
+│   ├── vimrc         # Pure Vim/Neovim configuration
+│   ├── colors/       # Vendored offline themes (Gruvbox Dark, Tokyo Night)
+│   ├── syntax/       # Offline TypeScript & TSX syntax definitions
+│   └── README.md     # Vim keybindings & search guide
 ├── zsh/
-│   ├── zshrc         # Resilient ZSH shell configuration & proxy helpers
+│   ├── zshrc         # Resilient ZSH shell config & proxy helpers
+│   ├── mdpreview     # Markdown & Mermaid.js browser previewer script
 │   └── README.md     # ZSH documentation & functions
 └── README.md         # Repository root overview
 ```
 
 ---
 
-## 🚀 Quick Setup
+## 🚀 Quick Start & Installation
 
-To install all components on a new machine, clone the repository and create the symlinks:
+### 1. Clone & Link Configurations
 
 ```bash
 git clone -b ghostty-vim-tmux https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
@@ -39,20 +54,47 @@ cd ~/terminal-setup
 ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
 ln -sf ~/terminal-setup/vim/vimrc ~/.vimrc
 ln -sf ~/terminal-setup/zsh/zshrc ~/.zshrc
+ln -sf ~/terminal-setup/vim ~/.vim
 
-# Ghostty configuration (if Ghostty is installed)
+# Link local binary scripts
+mkdir -p ~/.local/bin
+ln -sf ~/terminal-setup/zsh/mdpreview ~/.local/bin/mdpreview
+
+# Link Ghostty configuration (if Ghostty is installed)
 mkdir -p ~/.config/ghostty
 ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
 ```
 
 ---
 
-## 📖 Component Documentation
+## ⌨️ Key Features & Shortcuts
 
-- 👻 [Ghostty Config & Setup](ghostty/README.md)
-- 🪟 [TMUX Config & Keybindings](tmux/README.md)
-- ⌨️ [Vim Config & Keybindings](vim/README.md)
-- 🐚 [ZSH Config & Proxy Helpers](zsh/README.md)
+### 🪟 TMUX (Prefix: `Ctrl + a`)
+- **Panes:** `Ctrl+a \` (vertical split), `Ctrl+a -` (horizontal split), `Ctrl+a` + `Arrow Keys` or `h/j/k/l`.
+- **Preview Popups:** `Ctrl+a w` (floating window preview picker), `Ctrl+a p` (floating session preview picker).
+- **Clipboard:** Automatic OS clipboard integration (`pbcopy` on macOS, `clip.exe` on WSL2, `xclip` on Linux).
+
+### ⌨️ Vim / Neovim (Leader: `<Space>`)
+- **Navigation:** `<Space>` + `Arrow Keys` or `<Space> + h/j/k/l` to switch windows.
+- **File Explorer:** `<Space> e` to toggle Netrw file tree.
+- **File Search:** `<Space> ff` to search files by name (`:find <Tab>`).
+- **Text Search (Ripgrep):** `<Space> fg` to live grep project text, `<Space> fw` to grep word under cursor.
+- **Telescope-Style Quickfix:** Aligned, clean search results list with automatic 14-line height (`q` to close).
+- **Mermaid.js Preview:** `<Space> mp` to open live rendered Markdown & Mermaid.js diagrams in browser.
+
+### 🐚 ZSH Shell & Proxy Helpers
+- **Corporate Proxy:** `setproxy <url>`, `showproxy`, `unsetproxy`.
+- **Smart Launcher:** `tm` (creates or attaches to TMUX session).
+- **Markdown Previewer:** `mdpreview <file.md>` (renders Markdown + Mermaid.js in browser).
 
 ---
-*Branch: `ghostty-vim-tmux`*
+
+## 📖 Component Documentation
+
+- 👻 [Ghostty Setup Guide](ghostty/README.md)
+- 🪟 [TMUX & Preview Popup Guide](tmux/README.md)
+- ⌨️ [Vim & Search Keybindings Guide](vim/README.md)
+- 🐚 [ZSH & Proxy Helper Guide](zsh/README.md)
+
+---
+*Maintained with ❤️ by [malaquiasdev](https://github.com/malaquiasdev) • Branch: `ghostty-vim-tmux`*
