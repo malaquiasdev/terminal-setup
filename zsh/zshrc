@@ -9,8 +9,34 @@ export COLORTERM="truecolor"
 export EDITOR="vim"
 export VISUAL="vim"
 
+# --- ZSH Native Autocomplete & Tab Completion ---
+autoload -U compinit && compinit -C
+autoload -U bashcompinit && bashcompinit
+
+# Case-insensitive tab completion & colored menu list
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+
+# Load zsh-autosuggestions if available locally or via brew
+if [ -f "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
+elif [ -f "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+elif [ -f "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
+# Load zsh-syntax-highlighting if available locally or via brew
+if [ -f "$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
 # --- Corporate Proxy Helper Functions ---
-# Usage: setproxy http://proxy.company.com:8080 (or edit default below)
 DEFAULT_PROXY=""
 
 setproxy() {
@@ -40,7 +66,6 @@ showproxy() {
 }
 
 # --- Resilient Tool Aliases (Fallbacks for Limited Environments) ---
-# Check if modern tools exist, otherwise fallback cleanly
 if command -v nvim >/dev/null 2>&1; then
   alias vi="nvim"
   alias vim="nvim"

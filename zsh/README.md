@@ -1,6 +1,6 @@
 # 🐚 ZSH Shell Configuration
 
-Resilient ZSH configuration with built-in corporate proxy helper functions and automatic tool fallback degrading.
+Resilient ZSH configuration with built-in tab completion, auto-suggestions, syntax highlighting, and corporate proxy helper functions.
 
 ---
 
@@ -9,6 +9,14 @@ Resilient ZSH configuration with built-in corporate proxy helper functions and a
 ```bash
 ln -sf ~/terminal-setup/zsh/zshrc ~/.zshrc
 ```
+
+---
+
+## ✨ Autocomplete & Enhancements
+
+- **Native Tab Completion (`compinit`):** Case-insensitive matching, colored menu lists, and command flag autocompletion.
+- **Auto-suggestions (`zsh-autosuggestions`):** Shows grey command suggestions from history as you type (accept via Right Arrow `->` or `Ctrl+f`).
+- **Syntax Highlighting (`zsh-syntax-highlighting`):** Green for valid commands, red for invalid commands.
 
 ---
 
