@@ -80,7 +80,17 @@ let mapleader = " "
 " Clear search highlights with <Leader>ch
 nnoremap <Leader>ch :nohlsearch<CR>
 
-" Window Navigation using Space (<Leader> + h/j/k/l) OR Ctrl + h/j/k/l
+" Window Navigation using Space + Arrow Keys or Space + h/j/k/l or Ctrl + Arrow Keys
+nnoremap <Leader><Left>  <C-w>h
+nnoremap <Leader><Down>  <C-w>j
+nnoremap <Leader><Up>    <C-w>k
+nnoremap <Leader><Right> <C-w>l
+
+nnoremap <C-Left>  <C-w>h
+nnoremap <C-Down>  <C-w>j
+nnoremap <C-Up>    <C-w>k
+nnoremap <C-Right> <C-w>l
+
 nnoremap <Leader>h <C-w>h
 nnoremap <Leader>j <C-w>j
 nnoremap <Leader>k <C-w>k
@@ -117,6 +127,10 @@ nnoremap <Leader>co :copen<CR>
 nnoremap <Leader>cc :cclose<CR>
 nnoremap <Leader>cn :cnext<CR>
 nnoremap <Leader>cp :cprevious<CR>
+
+" Command-line history navigation with Arrow Keys
+cnoremap <Up> <C-p>
+cnoremap <Down> <C-n>
 
 " Quick Save / Quit
 nnoremap <Leader>w :w<CR>
