@@ -10,11 +10,9 @@ if [ ! -f "$TARGET" ]; then
 fi
 
 TMP_HTML="/tmp/md_preview_$$.html"
+B64_CONTENT=$(base64 < "$TARGET" | tr -d '\r\n')
 
-# Encode target markdown file to Base64 to prevent JS string escaping errors
-B64_CONTENT=$(base64 < "$TARGET" | tr -d '\n')
-
-cat <<HTML_FILE > "$TMP_HTML"
+cat <<'HTML_EOF' > "$TMP_HTML"
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,10 +40,9 @@ cat <<HTML_FILE > "$TMP_HTML"
       }).join(''));
     }
 
-    const rawMarkdown = b64DecodeUnicode("${B64_CONTENT}");
+    const rawMarkdown = b64DecodeUnicode("__B64_PLACEHOLDER__");
     document.getElementById('content').innerHTML = marked.parse(rawMarkdown);
     
-    // Convert ```mermaid code blocks to mermaid divs
     document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
       const parent = block.parentElement;
       const mermaidDiv = document.createElement('div');
@@ -58,6 +55,9 @@ cat <<HTML_FILE > "$TMP_HTML"
   </script>
 </body>
 </html>
-HTML_FILE
+HTML_EOF
+
+# Replace placeholder with Base64 content
+sed -i '' "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$TMP_HTML" 2>/dev/null || sed -i "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$TMP_HTML"
 
 open "$TMP_HTML"
