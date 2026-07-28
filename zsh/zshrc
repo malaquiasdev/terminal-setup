@@ -95,13 +95,9 @@ showproxy() {
   echo "NO_PROXY    = ${no_proxy:-none}"
 }
 
-# --- Resilient Tool Aliases (Fallbacks for Limited Environments) ---
-if command -v nvim >/dev/null 2>&1; then
-  alias vi="nvim"
-  alias vim="nvim"
-else
-  alias vi="vim"
-fi
+# --- Resilient Tool Aliases (Pure Vim for vim, nvim for Neovim) ---
+alias vi="vim -u ~/.vimrc"
+alias vim="vim -u ~/.vimrc"
 
 if command -v eza >/dev/null 2>&1; then
   alias ls="eza --icons"
