@@ -16,17 +16,16 @@ ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
 
 Primary Prefix: **`Ctrl + a`**
 
-### 1. Window Management (Tabs)
+### 1. Window & Session Management
 
 | Shortcut | Action |
 | --- | --- |
 | `Ctrl + a` then `c` | Create a new window (tab) in current directory path |
-| `Ctrl + a` then `w` | Open interactive visual window picker menu |
-| `Ctrl + a` then `s` | Open interactive visual session picker menu |
+| `Ctrl + a` then `w` | Open floating **Preview Popup** window picker (peek & select window without leaving current view) |
+| `Ctrl + a` then `p` | Open floating **Preview Popup** session picker (peek & select session) |
 | `Ctrl + a` then `,` | Rename the active window |
 | `Ctrl + a` then `1`..`9` | Switch directly to window number `1`..`9` |
 | `Ctrl + a` then `n` | Switch to **next** window |
-| `Ctrl + a` then `p` | Switch to **previous** window |
 | `Ctrl + Shift + Left` | Move active window tab to the **left** |
 | `Ctrl + Shift + Right` | Move active window tab to the **right** |
 | `Ctrl + a` then `&` | Close current window |
@@ -42,6 +41,16 @@ Primary Prefix: **`Ctrl + a`**
 | `Ctrl + a` then `k` | Focus pane **above** |
 | `Ctrl + a` then `l` | Focus pane to the **right** |
 | `Ctrl + a` then `r` | Reload configuration from `~/.tmux.conf` |
+
+---
+
+## 🔍 Preview Popup Details
+
+Pressing **`Ctrl + a` + `w`** or **`Ctrl + a` + `p`** opens a floating popup centered on your screen (`90% width/height`):
+- It renders a live scrollable preview of the selected session/window before switching.
+- Navigate the picker using `j` / `k` or arrow keys.
+- Press **`Enter`** to attach/switch to the target window/session.
+- Uses a grouped session (`_preview_PID`) under the hood so detaching or closing the popup doesn't disturb your current client workspace.
 
 ---
 
