@@ -49,11 +49,21 @@ if !exists("g:colors_name")
   colorscheme habamax
 endif
 
-" --- Search Settings ---
+" --- Search & Fuzzy File Navigation ---
 set ignorecase
 set smartcase
 set hlsearch
 set incsearch
+
+" Enable recursive file search in project for :find
+set path+=**
+set wildignore+=*/.git/*,*/node_modules/*,*/vendor/*,*/tmp/*,*.so,*.swp,*.zip
+
+" Use ripgrep (rg) if installed on system for lightning fast text searching
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  set grepformat=%f:%l:%c:%m
+endif
 
 " --- Indentation & Formatting ---
 set expandtab
@@ -91,6 +101,22 @@ let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
 nnoremap <Leader>e :Lexplore<CR>
+
+" --- Search Keybindings (Files & Text) ---
+" <Leader>ff: Search file by name (:find <Tab> auto-completes paths)
+nnoremap <Leader>ff :find 
+
+" <Leader>fg: Live grep text in project (:grep)
+nnoremap <Leader>fg :grep! 
+
+" <Leader>fw: Grep word under cursor across project
+nnoremap <Leader>fw :grep! <cword><CR>:copen<CR>
+
+" Quickfix Window Navigation (for grep results)
+nnoremap <Leader>co :copen<CR>
+nnoremap <Leader>cc :cclose<CR>
+nnoremap <Leader>cn :cnext<CR>
+nnoremap <Leader>cp :cprevious<CR>
 
 " Quick Save / Quit
 nnoremap <Leader>w :w<CR>
