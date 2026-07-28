@@ -15,7 +15,7 @@ hi Normal          guifg=#c0caf5 guibg=#1a1b26 ctermfg=189 ctermbg=234
 hi Terminal        guifg=#c0caf5 guibg=#1a1b26 ctermfg=189 ctermbg=234
 hi EndOfBuffer     guifg=#1a1b26 guibg=#1a1b26 ctermfg=234 ctermbg=234
 hi LineNr          guifg=#3b4261 guibg=NONE    ctermfg=238 ctermbg=NONE
-hi CursorLine      guibg=#292e42 ctermbg=236   gui=NONE
+hi CursorLine      guibg=#24283b ctermbg=236   gui=NONE
 hi CursorLineNr    guifg=#7aa2f7 guibg=NONE    ctermfg=111 ctermbg=NONE gui=bold
 
 hi Comment         guifg=#565f89 ctermfg=60    gui=italic
