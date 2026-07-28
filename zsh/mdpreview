@@ -1,11 +1,59 @@
 #!/usr/bin/env bash
-# Markdown & Mermaid.js Previewer Script
+# Markdown & Mermaid.js Browser Previewer
 # Usage: mdpreview <file.md>
 
 TARGET="${1:-README.md}"
 
-if command -v npx >/dev/null 2>&1; then
-  npx -y vmd "$TARGET" 2>/dev/null || npx -y gh-markdown-preview "$TARGET" 2>/dev/null || open "$TARGET"
-else
-  open "$TARGET"
+if [ ! -f "$TARGET" ]; then
+  echo "File not found: $TARGET"
+  exit 1
 fi
+
+TMP_HTML="/tmp/md_preview_$$.html"
+
+cat <<'HTML_HEADER' > "$TMP_HTML"
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Markdown & Mermaid Preview</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css">
+  <style>
+    body { background-color: #1a1b26; color: #c0caf5; padding: 2rem; max-width: 900px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .markdown-body { background-color: #1a1b26; color: #c0caf5; }
+    .markdown-body pre { background-color: #24283b; }
+    .markdown-body code { background-color: #24283b; color: #7dcfff; }
+  </style>
+</head>
+<body class="markdown-body">
+  <div id="content"></div>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+    const rawMarkdown = `
+HTML_HEADER
+
+# Escape backticks and dollar signs for template string embedding
+sed 's/`/\\`/g; s/\$/\\$/g' "$TARGET" >> "$TMP_HTML"
+
+cat <<'HTML_FOOTER' >> "$TMP_HTML"
+`;
+    document.getElementById('content').innerHTML = marked.parse(rawMarkdown);
+    
+    // Render Mermaid blocks
+    document.querySelectorAll('pre code.language-mermaid').forEach((block, index) => {
+      const parent = block.parentElement;
+      const mermaidDiv = document.createElement('div');
+      mermaidDiv.className = 'mermaid';
+      mermaidDiv.textContent = block.textContent;
+      parent.replaceWith(mermaidDiv);
+    });
+    
+    mermaid.run();
+  </script>
+</body>
+</html>
+HTML_FOOTER
+
+open "$TMP_HTML"
