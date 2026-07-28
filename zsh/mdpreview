@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Markdown & Mermaid.js Previewer Script
+# Usage: mdpreview <file.md>
+
+TARGET="${1:-README.md}"
+
+if command -v npx >/dev/null 2>&1; then
+  npx -y vmd "$TARGET" 2>/dev/null || npx -y gh-markdown-preview "$TARGET" 2>/dev/null || open "$TARGET"
+else
+  open "$TARGET"
+fi
