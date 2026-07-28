@@ -11,7 +11,10 @@ fi
 
 TMP_HTML="/tmp/md_preview_$$.html"
 
-cat <<'HTML_HEADER' > "$TMP_HTML"
+# Encode target markdown file to Base64 to prevent JS string escaping errors
+B64_CONTENT=$(base64 < "$TARGET" | tr -d '\n')
+
+cat <<HTML_FILE > "$TMP_HTML"
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,28 +24,29 @@ cat <<'HTML_HEADER' > "$TMP_HTML"
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css">
   <style>
-    body { background-color: #1a1b26; color: #c0caf5; padding: 2rem; max-width: 900px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #1a1b26; color: #c0caf5; padding: 2rem; max-width: 950px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     .markdown-body { background-color: #1a1b26; color: #c0caf5; }
     .markdown-body pre { background-color: #24283b; }
     .markdown-body code { background-color: #24283b; color: #7dcfff; }
+    .mermaid { background-color: #24283b; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
   </style>
 </head>
 <body class="markdown-body">
   <div id="content"></div>
   <script>
     mermaid.initialize({ startOnLoad: false, theme: 'dark' });
-    const rawMarkdown = `
-HTML_HEADER
 
-# Escape backticks and dollar signs for template string embedding
-sed 's/`/\\`/g; s/\$/\\$/g' "$TARGET" >> "$TMP_HTML"
+    function b64DecodeUnicode(str) {
+      return decodeURIComponent(atob(str).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+    }
 
-cat <<'HTML_FOOTER' >> "$TMP_HTML"
-`;
+    const rawMarkdown = b64DecodeUnicode("${B64_CONTENT}");
     document.getElementById('content').innerHTML = marked.parse(rawMarkdown);
     
-    // Render Mermaid blocks
-    document.querySelectorAll('pre code.language-mermaid').forEach((block, index) => {
+    // Convert ```mermaid code blocks to mermaid divs
+    document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
       const parent = block.parentElement;
       const mermaidDiv = document.createElement('div');
       mermaidDiv.className = 'mermaid';
@@ -54,6 +58,6 @@ cat <<'HTML_FOOTER' >> "$TMP_HTML"
   </script>
 </body>
 </html>
-HTML_FOOTER
+HTML_FILE
 
 open "$TMP_HTML"
