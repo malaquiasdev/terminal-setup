@@ -1,97 +1,51 @@
-# 🌌 Terminal Setup 2026
+# 👻 Ghostty + Vim + TMUX Setup (Restricted Environment Edition)
 
-**A high-performance, aesthetically pleasing development environment.**  
-Inspired by [craftzdog/dotfiles-public](https://github.com/craftzdog/dotfiles-public), optimized for 2026 workflows.
-
----
-
-## 🎨 Aesthetics & Interface
-
-- **Theme:** [Tokyo Night (Night variant)](https://github.com/folke/tokyonight.nvim) — Deep blues and vibrant neon accents for maximum focus.
-- **Font:** [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) — Size 16, with ligatures and Powerline glyphs enabled.
-- **Terminal:** iTerm2 with 24-bit TrueColor support (`COLORTERM=truecolor`).
-
-## 🐚 Shell (Zsh + Powerlevel10k)
-
-Managed via **Oh My Zsh**, featuring:
-- **Prompt:** [Powerlevel10k](https://github.com/romkatv/powerlevel10k) (Instant Prompt enabled & optimized).
-- **Navigation:** [Zoxide](https://github.com/ajeetdsouza/zoxide) (`z` instead of `cd`).
-- **Modern CLI Tools:**
-  - `eza` (Better `ls` with icons).
-  - `bat` (Better `cat` with syntax highlighting).
-  - `ripgrep` (`rg`) & `fd` for ultra-fast searching.
-  - `fzf` for fuzzy finding.
-  - `lazygit` for terminal-based Git TUI.
-
-## 🪟 TMUX (Modular Configuration)
-
-Located in `~/.config/tmux/` for better organization:
-- **Prefix:** `Ctrl + a` (Classic & ergonomic).
-- **Session Management:** Powered by `tmux-sessionist`.
-  - `prefix + g`: Create new session.
-  - `prefix + C`: Create session from current pane path.
-  - `prefix + X`: Kill current session (jumps to next).
-  - `prefix + S`: Toggle between last used sessions.
-- **Preview Popup** (peek at another session/window without disturbing your client):
-  - `prefix + p`: Visual session picker → opens the selected session in a scrollable popup. *(overrides default `previous-window`)*
-  - `prefix + w`: Visual window picker → opens the selected window in a scrollable popup. *(overrides default `choose-tree`)*
-  - Navigate the picker with `j/k`, select with `Enter`. Detach the popup with `prefix + d`.
-  - Uses a grouped tmux session so closing the popup doesn't move your original client.
-  - Scroll inside with `prefix + [` (copy-mode) or the mouse wheel. Note: typing here affects the shared pane, since the popup shares the live windows.
-- **Auto-Persistence:** `tmux-resurrect` & `tmux-continuum` save state every 15m.
-- **UX:** Window/Pane numbering starts at **1**.
-- **Mouse:** Fully enabled with **macOS Clipboard integration** (`pbcopy`).
-- **Layouts:** Standardized splits with `\` and `-`.
-
-## ⌨️ Neovim (LazyVim / Craftzdog Style)
-
-A modern, Lua-based IDE experience:
-- **Plugin Manager:** `lazy.nvim`.
-- **Theme:** Tokyo Night (Transparent background).
-- **LSP/Treesitter:** Pre-configured for Go, Node.js, and Cloud-native development.
+**A lightweight, zero-external-dependency terminal setup optimized for restricted corporate environments, firewalls, and proxy networks.**
 
 ---
 
-## 🚀 Quick Start (macOS)
+## 🔒 Designed for Restricted Environments
+- **Zero Online Plugin Dependencies:** TMUX and Vim function completely out-of-the-box without needing `git clone` or online plugin managers (TPM / lazy.nvim) during runtime.
+- **Proxy Aware:** Pre-built Zsh helper functions (`setproxy`, `unsetproxy`, `showproxy`).
+- **Tool Fallbacks:** Graceful degradation if modern CLI tools (`eza`, `bat`, `ripgrep`, `nvim`) cannot be installed due to lack of admin permissions.
 
-### 1. Requirements
+---
+
+## 🛠️ Stack Overview
+
+| Component | Target Tool | Configuration Path | Notes |
+| --- | --- | --- | --- |
+| **Terminal** | [Ghostty](https://github.com/ghostty-org/ghostty) | `.config/ghostty/config` | TokyoNight theme, TrueColor, JetBrainsMono font |
+| **Editor** | Vim / Neovim | `.vimrc` | Native statusline, netrw explorer, vi keybindings |
+| **Multiplexer** | TMUX | `.config/tmux/tmux.conf` | `Ctrl+a` prefix, TokyoNight status bar, OS clipboard |
+| **Shell** | ZSH | `.zshrc` | Proxy management, user-space `$PATH`, resilience fallbacks |
+
+---
+
+## 🚀 Quick Setup
+
+### 1. Link Configurations
 ```bash
-# Core Tools
-brew install iterm2 git zsh tmux neovim zoxide eza bat ripgrep fd fzf lazygit
-
-# Font (Crucial for icons)
-brew install --cask font-jetbrains-mono-nerd-font
-```
-
-### 2. Installation (Dotfiles)
-Clone this repo and link the configurations:
-```bash
-git clone https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
 cd ~/terminal-setup
 
-# Link configurations
-ln -s ~/terminal-setup/.zshrc ~/.zshrc
-ln -s ~/terminal-setup/.config/tmux/tmux.conf ~/.tmux.conf
-mkdir -p ~/.config
-ln -s ~/terminal-setup/.config/tmux ~/.config/tmux
-ln -s ~/terminal-setup/.config/nvim ~/.config/nvim
+# Create required directory structure
+mkdir -p ~/.config/ghostty ~/.config/tmux
+
+# Symlink dotfiles
+ln -sf ~/terminal-setup/.config/ghostty/config ~/.config/ghostty/config
+ln -sf ~/terminal-setup/.config/tmux/tmux.conf ~/.config/tmux/tmux.conf
+ln -sf ~/terminal-setup/.tmux.conf ~/.tmux.conf
+ln -sf ~/terminal-setup/.vimrc ~/.vimrc
+ln -sf ~/terminal-setup/.zshrc ~/.zshrc
 ```
 
-### 3. Apply Theme
-- **iTerm2:** Go to `Settings -> Profiles -> Other Actions -> Import JSON` and select `iterm.json`.
-- **Tmux:** Press `Prefix + I` to install plugins via TPM.
+### 2. Corporate Proxy Management (Zsh)
+Configure network proxies on demand:
+```bash
+setproxy http://proxy.company.com:8080
+showproxy
+unsetproxy
+```
 
 ---
-
-## ⌨️ Key Aliases
-
-| Alias | Command |
-| --- | --- |
-| `vi` / `vim` | `nvim` |
-| `tm` | `Smart Tmux Session Manager` |
-| `ls` | `eza --icons` |
-| `cd` | `z` |
-| `kgs` / `kgp` | `kubectl get svc/pods` |
-
----
-*Maintained with ❤️ by [malaquiasdev](https://github.com/malaquiasdev)*
+*Branch: `ghostty-vim-tmux`*

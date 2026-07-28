@@ -1,0 +1,38 @@
+# 🌌 Ghostty Terminal Configuration (Restricted Environment Optimized)
+# Location: ~/.config/ghostty/config
+
+# --- Typography & Font ---
+font-family = JetBrainsMono Nerd Font
+font-family = Menlo
+font-family = monospace
+font-size = 15
+font-thicken = true
+
+# --- Theme & Colors ---
+theme = TokyoNight
+background-opacity = 0.95
+background-blur-radius = 20
+
+# --- Window & Aesthetics ---
+window-padding-x = 12
+window-padding-y = 12
+window-decoration = true
+macos-titlebar-style = transparent
+
+# --- Cursor & Mouse ---
+cursor-style = block
+cursor-style-blink = false
+cursor-color = #7aa2f7
+cursor-text = #1a1b26
+mouse-hide-while-typing = true
+
+# --- Behavior & Shell ---
+confirm-close-surface = false
+shell-integration = zsh
+copy-on-select = true
+
+# --- Keybindings ---
+keybind = super+ctrl+r=reload_config
+keybind = super+t=new_tab
+keybind = super+w=close_surface
+keybind = super+k=clear_screen
