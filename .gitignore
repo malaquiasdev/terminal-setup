@@ -1,10 +1,6 @@
 # OS X
 .DS_Store
 
-# TMUX Plugins
-.config/tmux/plugins/*
-!.config/tmux/plugins/tpm/
-
 # Logs
 logs
 *.log
@@ -14,8 +10,10 @@ npm-debug.log*
 node_modules/
 dist/
 
-# Editor
+# Editor & Temporary Files
 .vscode/
 .idea/
 *.swp
 *.swo
+.netrwhist
+*.netrwhist
