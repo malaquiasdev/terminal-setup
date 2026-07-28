@@ -21,6 +21,8 @@ Primary Prefix: **`Ctrl + a`**
 | Shortcut | Action |
 | --- | --- |
 | `Ctrl + a` then `c` | Create a new window (tab) in current directory path |
+| `Ctrl + a` then `w` | Open interactive visual window picker menu |
+| `Ctrl + a` then `s` | Open interactive visual session picker menu |
 | `Ctrl + a` then `,` | Rename the active window |
 | `Ctrl + a` then `1`..`9` | Switch directly to window number `1`..`9` |
 | `Ctrl + a` then `n` | Switch to **next** window |
