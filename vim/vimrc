@@ -67,10 +67,15 @@ set wrap
 " --- Keybindings ---
 let mapleader = " "
 
-" Clear search highlights with <Leader>h
-nnoremap <Leader>h :nohlsearch<CR>
+" Clear search highlights with <Leader>ch
+nnoremap <Leader>ch :nohlsearch<CR>
 
-" Window Navigation (Ctrl + h/j/k/l)
+" Window Navigation using Space (<Leader> + h/j/k/l) OR Ctrl + h/j/k/l
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>l <C-w>l
+
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
