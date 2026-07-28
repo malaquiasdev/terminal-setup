@@ -16,7 +16,20 @@ ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
 
 Primary Prefix: **`Ctrl + a`**
 
-### 1. Pane Management
+### 1. Window Management (Tabs)
+
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl + a` then `c` | Create a new window (tab) in current directory path |
+| `Ctrl + a` then `,` | Rename the active window |
+| `Ctrl + a` then `1`..`9` | Switch directly to window number `1`..`9` |
+| `Ctrl + a` then `n` | Switch to **next** window |
+| `Ctrl + a` then `p` | Switch to **previous** window |
+| `Ctrl + Shift + Left` | Move active window tab to the **left** |
+| `Ctrl + Shift + Right` | Move active window tab to the **right** |
+| `Ctrl + a` then `&` | Close current window |
+
+### 2. Pane Management (Splits)
 
 | Shortcut | Action |
 | --- | --- |
@@ -26,13 +39,6 @@ Primary Prefix: **`Ctrl + a`**
 | `Ctrl + a` then `j` | Focus pane **below** |
 | `Ctrl + a` then `k` | Focus pane **above** |
 | `Ctrl + a` then `l` | Focus pane to the **right** |
-
-### 2. Window & Session Management
-
-| Shortcut | Action |
-| --- | --- |
-| `Ctrl + a` then `c` | Create a new window in current path |
-| `Ctrl + a` then `1`..`9` | Switch to corresponding window number |
 | `Ctrl + a` then `r` | Reload configuration from `~/.tmux.conf` |
 
 ---
