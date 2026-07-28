@@ -155,6 +155,9 @@ nnoremap <Leader>cc :cclose<CR>
 nnoremap <Leader>cn :cnext<CR>
 nnoremap <Leader>cp :cprevious<CR>
 
+" Markdown Live Preview with Mermaid.js rendering (<Leader>mp)
+nnoremap <Leader>mp :!mdpreview %<CR>
+
 " Command-line history navigation with Arrow Keys
 cnoremap <Up> <C-p>
 cnoremap <Down> <C-n>
