@@ -21,6 +21,9 @@ set timeoutlen=500
 set backspace=indent,eol,start
 set mouse=a
 
+" Include local repository path for vendored colors & runtime
+set runtimepath+=~/terminal-setup/vim
+
 " --- UI & Aesthetics ---
 set number
 set relativenumber
@@ -33,14 +36,18 @@ set scrolloff=8
 set sidescrolloff=8
 set signcolumn=yes
 
-" Enable 24-bit TrueColor if supported
+" Enable 24-bit TrueColor
 if has("termguicolors")
   set termguicolors
 endif
 
-" Fallback dark background theme
 set background=dark
-colorscheme habamax
+
+" Load Tokyo Night theme if available, fallback to habamax / dark
+silent! colorscheme tokyonight
+if !exists("g:colors_name")
+  colorscheme habamax
+endif
 
 " --- Search Settings ---
 set ignorecase
