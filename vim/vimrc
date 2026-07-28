@@ -68,6 +68,30 @@ if executable('rg')
   set grepformat=%f:%l:%c:%m
 endif
 
+" Custom Clean Quickfix List Formatter (Telescope / FZF style)
+function! QuickfixFormat(info)
+  let l:items = getqflist({'id': a:info.id, 'items': 1}).items
+  let l:lines = []
+  for l:idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
+    let l:item = l:items[l:idx]
+    if l:item.bufnr > 0
+      let l:fname = fnamemodify(bufname(l:item.bufnr), ':~:.')
+      if len(l:fname) > 38
+        let l:fname = '...' . l:fname[len(l:fname)-35:]
+      endif
+      let l:line = printf(' %-38s │ %4d:%-2d │ %s', l:fname, l:item.lnum, l:item.col, trim(l:item.text))
+    else
+      let l:line = l:item.text
+    endif
+    call add(l:lines, l:line)
+  endfor
+  return l:lines
+endfunction
+
+if has("patch-8.2.0869") || has("nvim-0.5")
+  set quickfixtextfunc=QuickfixFormat
+endif
+
 " --- Indentation & Formatting ---
 set expandtab
 set tabstop=2
@@ -126,7 +150,7 @@ nnoremap <Leader>fg :grep!
 nnoremap <Leader>fw :grep! <cword><CR>
 
 " Quickfix Window Navigation (for grep results)
-nnoremap <Leader>co :copen<CR>
+nnoremap <Leader>co :copen 8<CR>
 nnoremap <Leader>cc :cclose<CR>
 nnoremap <Leader>cn :cnext<CR>
 nnoremap <Leader>cp :cprevious<CR>
@@ -162,6 +186,8 @@ augroup CustomAutocmds
   " Highlight line on active window
   autocmd WinEnter * set cursorline
   autocmd WinLeave * set nocursorline
-  " Automatically open Quickfix window when grep finds matches
-  autocmd QuickFixCmdPost [^l]* cwindow
+  " Automatically open Quickfix window (max 8 lines) when grep finds matches
+  autocmd QuickFixCmdPost [^l]* cwindow 8
+  " Inside Quickfix: pressing 'q' closes the quickfix window
+  autocmd FileType qf nnoremap <buffer> q :cclose<CR>
 augroup END
