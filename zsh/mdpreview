@@ -32,7 +32,7 @@ cat <<'HTML_EOF' > "$TMP_HTML"
 <body class="markdown-body">
   <div id="content"></div>
   <script>
-    mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+    mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
 
     function b64DecodeUnicode(str) {
       return decodeURIComponent(atob(str).split('').map(function(c) {
@@ -43,11 +43,13 @@ cat <<'HTML_EOF' > "$TMP_HTML"
     const rawMarkdown = b64DecodeUnicode("__B64_PLACEHOLDER__");
     document.getElementById('content').innerHTML = marked.parse(rawMarkdown);
     
+    // Replace \n inside mermaid code blocks with <br/> for Mermaid 11 compatibility
     document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
       const parent = block.parentElement;
       const mermaidDiv = document.createElement('div');
       mermaidDiv.className = 'mermaid';
-      mermaidDiv.textContent = block.textContent;
+      let cleanText = block.textContent.replace(/\\n/g, '<br/>');
+      mermaidDiv.innerHTML = cleanText;
       parent.replaceWith(mermaidDiv);
     });
     
