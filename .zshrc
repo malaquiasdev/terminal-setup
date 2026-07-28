@@ -161,3 +161,7 @@ export PATH=$PATH:$(go env GOPATH)/bin
 export COLORTERM=truecolor
 
 . "$HOME/.cargo/env"
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/mateusmalaquias/.local/bin:$PATH"
