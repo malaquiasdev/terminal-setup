@@ -9,7 +9,7 @@ font-size = 15
 font-thicken = true
 
 # --- Theme & Colors ---
-theme = TokyoNight
+theme = GruvboxDark
 background-opacity = 0.95
 background-blur-radius = 20
 
@@ -22,8 +22,8 @@ macos-titlebar-style = transparent
 # --- Cursor & Mouse ---
 cursor-style = block
 cursor-style-blink = false
-cursor-color = #7aa2f7
-cursor-text = #1a1b26
+cursor-color = #fe8019
+cursor-text = #282828
 mouse-hide-while-typing = true
 
 # --- Behavior & Shell ---
