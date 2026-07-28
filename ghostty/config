@@ -9,7 +9,7 @@ font-size = 15
 font-thicken = true
 
 # --- Theme & Colors ---
-theme = GruvboxDark
+theme = Gruvbox Dark
 background-opacity = 0.95
 background-blur-radius = 20
 
