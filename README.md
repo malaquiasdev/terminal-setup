@@ -1,97 +1,100 @@
-# 🌌 Terminal Setup 2026
+# 🌌 Terminal Setup — Ghostty + Vim + TMUX (Gruvbox Edition)
 
-**A high-performance, aesthetically pleasing development environment.**  
-Inspired by [craftzdog/dotfiles-public](https://github.com/craftzdog/dotfiles-public), optimized for 2026 workflows.
-
----
-
-## 🎨 Aesthetics & Interface
-
-- **Theme:** [Tokyo Night (Night variant)](https://github.com/folke/tokyonight.nvim) — Deep blues and vibrant neon accents for maximum focus.
-- **Font:** [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) — Size 16, with ligatures and Powerline glyphs enabled.
-- **Terminal:** iTerm2 with 24-bit TrueColor support (`COLORTERM=truecolor`).
-
-## 🐚 Shell (Zsh + Powerlevel10k)
-
-Managed via **Oh My Zsh**, featuring:
-- **Prompt:** [Powerlevel10k](https://github.com/romkatv/powerlevel10k) (Instant Prompt enabled & optimized).
-- **Navigation:** [Zoxide](https://github.com/ajeetdsouza/zoxide) (`z` instead of `cd`).
-- **Modern CLI Tools:**
-  - `eza` (Better `ls` with icons).
-  - `bat` (Better `cat` with syntax highlighting).
-  - `ripgrep` (`rg`) & `fd` for ultra-fast searching.
-  - `fzf` for fuzzy finding.
-  - `lazygit` for terminal-based Git TUI.
-
-## 🪟 TMUX (Modular Configuration)
-
-Located in `~/.config/tmux/` for better organization:
-- **Prefix:** `Ctrl + a` (Classic & ergonomic).
-- **Session Management:** Powered by `tmux-sessionist`.
-  - `prefix + g`: Create new session.
-  - `prefix + C`: Create session from current pane path.
-  - `prefix + X`: Kill current session (jumps to next).
-  - `prefix + S`: Toggle between last used sessions.
-- **Preview Popup** (peek at another session/window without disturbing your client):
-  - `prefix + p`: Visual session picker → opens the selected session in a scrollable popup. *(overrides default `previous-window`)*
-  - `prefix + w`: Visual window picker → opens the selected window in a scrollable popup. *(overrides default `choose-tree`)*
-  - Navigate the picker with `j/k`, select with `Enter`. Detach the popup with `prefix + d`.
-  - Uses a grouped tmux session so closing the popup doesn't move your original client.
-  - Scroll inside with `prefix + [` (copy-mode) or the mouse wheel. Note: typing here affects the shared pane, since the popup shares the live windows.
-- **Auto-Persistence:** `tmux-resurrect` & `tmux-continuum` save state every 15m.
-- **UX:** Window/Pane numbering starts at **1**.
-- **Mouse:** Fully enabled with **macOS Clipboard integration** (`pbcopy`).
-- **Layouts:** Standardized splits with `\` and `-`.
-
-## ⌨️ Neovim (LazyVim / Craftzdog Style)
-
-A modern, Lua-based IDE experience:
-- **Plugin Manager:** `lazy.nvim`.
-- **Theme:** Tokyo Night (Transparent background).
-- **LSP/Treesitter:** Pre-configured for Go, Node.js, and Cloud-native development.
+**A high-performance, aesthetically pleasing, zero-dependency development environment optimized for restricted corporate environments, firewalls, and proxy networks.**
 
 ---
 
-## 🚀 Quick Start (macOS)
+## 🎨 Aesthetics & Stack
 
-### 1. Requirements
-```bash
-# Core Tools
-brew install iterm2 git zsh tmux neovim zoxide eza bat ripgrep fd fzf lazygit
+- **Theme:** [Gruvbox Dark](https://github.com/morhetz/gruvbox) — Earthy, warm palette designed for high legibility during long coding sessions.
+- **Font:** [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) (Size 15) with fallback monospace fonts.
+- **Terminal:** [Ghostty](https://github.com/ghostty-org/ghostty) with 24-bit TrueColor support (`COLORTERM=truecolor`).
+- **Multiplexer:** TMUX (Standalone, zero-TPM runtime dependency).
+- **Editor:** Vim 8+ / Neovim (Pure Vim config, offline themes & TypeScript support).
+- **Shell:** ZSH (Native `compinit` autocomplete, autosuggestions, syntax-highlighting & proxy helpers).
 
-# Font (Crucial for icons)
-brew install --cask font-jetbrains-mono-nerd-font
+---
+
+## 📂 Modular Repository Architecture
+
+Each tool is isolated in its dedicated directory containing configuration files and individual documentation:
+
+```text
+.
+├── ghostty/
+│   ├── config        # Native Ghostty configuration (Gruvbox Dark)
+│   └── README.md     # Ghostty documentation & keybindings
+├── tmux/
+│   ├── tmux.conf     # Standalone TMUX configuration (Gruvbox status bar)
+│   ├── preview.sh    # Floating preview popup script
+│   └── README.md     # TMUX keybindings & preview popup guide
+├── vim/
+│   ├── vimrc         # Pure Vim/Neovim configuration
+│   ├── colors/       # Vendored offline themes (Gruvbox Dark, Tokyo Night)
+│   ├── syntax/       # Offline TypeScript & TSX syntax definitions
+│   └── README.md     # Vim keybindings & search guide
+├── zsh/
+│   ├── zshrc         # Resilient ZSH shell config & proxy helpers
+│   ├── mdpreview     # Markdown & Mermaid.js browser previewer script
+│   └── README.md     # ZSH documentation & functions
+└── README.md         # Repository root overview
 ```
 
-### 2. Installation (Dotfiles)
-Clone this repo and link the configurations:
+---
+
+## 🚀 Quick Start & Installation
+
+### 1. Clone & Link Configurations
+
 ```bash
-git clone https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
+git clone -b ghostty-vim-tmux https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
 cd ~/terminal-setup
 
-# Link configurations
-ln -s ~/terminal-setup/.zshrc ~/.zshrc
-ln -s ~/terminal-setup/.config/tmux/tmux.conf ~/.tmux.conf
-mkdir -p ~/.config
-ln -s ~/terminal-setup/.config/tmux ~/.config/tmux
-ln -s ~/terminal-setup/.config/nvim ~/.config/nvim
+# Link application configurations
+ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
+ln -sf ~/terminal-setup/vim/vimrc ~/.vimrc
+ln -sf ~/terminal-setup/zsh/zshrc ~/.zshrc
+ln -sf ~/terminal-setup/vim ~/.vim
+
+# Link local binary scripts
+mkdir -p ~/.local/bin
+ln -sf ~/terminal-setup/zsh/mdpreview ~/.local/bin/mdpreview
+
+# Link Ghostty configuration (if Ghostty is installed)
+mkdir -p ~/.config/ghostty
+ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
 ```
 
-### 3. Apply Theme
-- **iTerm2:** Go to `Settings -> Profiles -> Other Actions -> Import JSON` and select `iterm.json`.
-- **Tmux:** Press `Prefix + I` to install plugins via TPM.
+---
+
+## ⌨️ Key Features & Shortcuts
+
+### 🪟 TMUX (Prefix: `Ctrl + a`)
+- **Panes:** `Ctrl+a \` (vertical split), `Ctrl+a -` (horizontal split), `Ctrl+a` + `Arrow Keys` or `h/j/k/l`.
+- **Preview Popups:** `Ctrl+a w` (floating window preview picker), `Ctrl+a p` (floating session preview picker).
+- **Clipboard:** Automatic OS clipboard integration (`pbcopy` on macOS, `clip.exe` on WSL2, `xclip` on Linux).
+
+### ⌨️ Vim / Neovim (Leader: `<Space>`)
+- **Navigation:** `<Space>` + `Arrow Keys` or `<Space> + h/j/k/l` to switch windows.
+- **File Explorer:** `<Space> e` to toggle Netrw file tree.
+- **File Search:** `<Space> ff` to search files by name (`:find <Tab>`).
+- **Text Search (Ripgrep):** `<Space> fg` to live grep project text, `<Space> fw` to grep word under cursor.
+- **Telescope-Style Quickfix:** Aligned, clean search results list with automatic 14-line height (`q` to close).
+- **Mermaid.js Preview:** `<Space> mp` to open live rendered Markdown & Mermaid.js diagrams in browser.
+
+### 🐚 ZSH Shell & Proxy Helpers
+- **Corporate Proxy:** `setproxy <url>`, `showproxy`, `unsetproxy`.
+- **Smart Launcher:** `tm` (creates or attaches to TMUX session).
+- **Markdown Previewer:** `mdpreview <file.md>` (renders Markdown + Mermaid.js in browser).
 
 ---
 
-## ⌨️ Key Aliases
+## 📖 Component Documentation
 
-| Alias | Command |
-| --- | --- |
-| `vi` / `vim` | `nvim` |
-| `tm` | `Smart Tmux Session Manager` |
-| `ls` | `eza --icons` |
-| `cd` | `z` |
-| `kgs` / `kgp` | `kubectl get svc/pods` |
+- 👻 [Ghostty Setup Guide](ghostty/README.md)
+- 🪟 [TMUX & Preview Popup Guide](tmux/README.md)
+- ⌨️ [Vim & Search Keybindings Guide](vim/README.md)
+- 🐚 [ZSH & Proxy Helper Guide](zsh/README.md)
 
 ---
-*Maintained with ❤️ by [malaquiasdev](https://github.com/malaquiasdev)*
+*Maintained with ❤️ by [malaquiasdev](https://github.com/malaquiasdev) • Branch: `ghostty-vim-tmux`*

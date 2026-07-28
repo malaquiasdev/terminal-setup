@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Markdown & Mermaid.js Browser Previewer
+# Usage: mdpreview <file.md>
+
+TARGET="${1:-README.md}"
+
+if [ ! -f "$TARGET" ]; then
+  echo "File not found: $TARGET"
+  exit 1
+fi
+
+TMP_HTML="/tmp/md_preview_$$.html"
+B64_CONTENT=$(base64 < "$TARGET" | tr -d '\r\n')
+
+cat <<'HTML_EOF' > "$TMP_HTML"
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Markdown & Mermaid Preview</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css">
+  <style>
+    body { background-color: #1a1b26; color: #c0caf5; padding: 2rem; max-width: 950px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .markdown-body { background-color: #1a1b26; color: #c0caf5; }
+    .markdown-body pre { background-color: #24283b; }
+    .markdown-body code { background-color: #24283b; color: #7dcfff; }
+    .mermaid { background-color: #24283b; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
+  </style>
+</head>
+<body class="markdown-body">
+  <div id="content"></div>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+
+    function b64DecodeUnicode(str) {
+      return decodeURIComponent(atob(str).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+    }
+
+    const rawMarkdown = b64DecodeUnicode("__B64_PLACEHOLDER__");
+    document.getElementById('content').innerHTML = marked.parse(rawMarkdown);
+    
+    // Replace \n inside mermaid code blocks with <br/> for Mermaid 11 compatibility
+    document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
+      const parent = block.parentElement;
+      const mermaidDiv = document.createElement('div');
+      mermaidDiv.className = 'mermaid';
+      let cleanText = block.textContent.replace(/\\n/g, '<br/>');
+      mermaidDiv.innerHTML = cleanText;
+      parent.replaceWith(mermaidDiv);
+    });
+    
+    mermaid.run();
+  </script>
+</body>
+</html>
+HTML_EOF
+
+# Replace placeholder with Base64 content
+sed -i '' "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$TMP_HTML" 2>/dev/null || sed -i "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$TMP_HTML"
+
+open "$TMP_HTML"

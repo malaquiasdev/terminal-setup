@@ -2,8 +2,6 @@
 # Preview a tmux session/window in a popup via a grouped session.
 # Grouped sessions share windows with the source but keep an independent
 # active-window, so previewing doesn't yank the original client around.
-# Note: not read-only — typing here affects the shared pane. Use copy-mode
-# (prefix + [) or mouse wheel to scroll the scrollback.
 set -uo pipefail
 
 TARGET="${1:?usage: preview.sh <session[:window[.pane]]>}"

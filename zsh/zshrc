@@ -1,0 +1,168 @@
+# ==============================================================================
+# 🐚 ZSH Shell Configuration (Restricted Environment & Proxy Ready)
+# Location: ~/.zshrc
+# ==============================================================================
+
+# --- Homebrew & System PATH Integration ---
+if [ -x "/opt/homebrew/bin/brew" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x "/usr/local/bin/brew" ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# Export user-space binary directories ($PATH)
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.antigravity/antigravity/bin:$HOME/.opencode/bin:$HOME/.bun/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
+
+if command -v go >/dev/null 2>&1; then
+  export PATH="$PATH:$(go env GOPATH 2>/dev/null)/bin"
+fi
+
+export COLORTERM="truecolor"
+export EDITOR="vim"
+export VISUAL="vim"
+
+# --- Version Managers & Tools (NVM, Bun, Cargo, SDKMAN) ---
+export BUN_INSTALL="$HOME/.bun"
+
+# Rust / Cargo
+[ -s "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+# NVM (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Bun Completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# SDKMAN
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# --- ZSH Native Autocomplete & Tab Completion ---
+autoload -U compinit && compinit -C
+autoload -U bashcompinit && bashcompinit
+
+# Case-insensitive tab completion & colored menu list
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
+
+# Load zsh-autosuggestions if available locally or via brew
+if [ -f "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
+elif [ -f "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+elif [ -f "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
+# Load zsh-syntax-highlighting if available locally or via brew
+if [ -f "$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
+# --- Markdown & Mermaid.js Preview Helper ---
+mdpreview() {
+  local target="${1:-README.md}"
+  if command -v npx >/dev/null 2>&1; then
+    npx -y vmd "$target" 2>/dev/null || npx -y gh-markdown-preview "$target"
+  else
+    echo "Opening $target..."
+    open "$target"
+  fi
+}
+
+# --- Corporate Proxy Helper Functions ---
+DEFAULT_PROXY=""
+
+setproxy() {
+  local p="${1:-$DEFAULT_PROXY}"
+  if [ -z "$p" ]; then
+    echo "Usage: setproxy <http://proxy-host:port>"
+    return 1
+  fi
+  export http_proxy="$p"
+  export https_proxy="$p"
+  export HTTP_PROXY="$p"
+  export HTTPS_PROXY="$p"
+  export ftp_proxy="$p"
+  export no_proxy="localhost,127.0.0.1,.local,.internal"
+  echo " Proxy set to: $p"
+}
+
+unsetproxy() {
+  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ftp_proxy no_proxy
+  echo " Proxy settings cleared."
+}
+
+showproxy() {
+  echo "HTTP_PROXY  = ${http_proxy:-none}"
+  echo "HTTPS_PROXY = ${https_proxy:-none}"
+  echo "NO_PROXY    = ${no_proxy:-none}"
+}
+
+# --- Resilient Tool Aliases (Pure Vim for vim, nvim for Neovim) ---
+alias vi="vim -u ~/.vimrc"
+alias vim="vim -u ~/.vimrc"
+
+if command -v eza >/dev/null 2>&1; then
+  alias ls="eza --icons"
+  alias ll="eza -la --icons"
+elif ls --color >/dev/null 2>&1; then
+  alias ls="ls --color=auto"
+  alias ll="ls -la --color=auto"
+else
+  alias ls="ls -G"
+  alias ll="ls -laG"
+fi
+
+if command -v bat >/dev/null 2>&1; then
+  alias cat="bat"
+fi
+
+# Git Aliases
+alias gc="git checkout"
+alias gcb="git checkout -b"
+alias gcm="git commit -m"
+alias gp="git fetch -p && git pull"
+alias gm="git merge"
+alias gr="git rebase"
+alias gb="git branch"
+alias gs="git stash"
+alias ga="git add"
+alias gps="git push"
+
+# Tmux Aliases
+alias tls="tmux ls"
+alias tk="tmux kill-session -t"
+
+# Kubectl Aliases
+alias kdp="kubectl describe pod"
+alias kgs="kubectl get svc"
+alias kgp="kubectl get pods"
+
+# --- TMUX Smart Session Launcher ---
+tm() {
+  local session_name="${1:-main}"
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    tmux attach-session -t "$session_name"
+  else
+    tmux new-session -s "$session_name"
+  fi
+}
+
+# --- Prompt (Clean Standalone Fallback) ---
+if [ -d "$HOME/.oh-my-zsh" ]; then
+  export ZSH="$HOME/.oh-my-zsh"
+  ZSH_THEME="robbyrussell"
+  plugins=(git)
+  [ -f "$ZSH/oh-my-zsh.sh" ] && source "$ZSH/oh-my-zsh.sh"
+else
+  autoload -U colors && colors
+  PROMPT="%{$fg[cyan]%}%n@%m%{$reset_color%}:%{$fg[blue]%}%~%{$reset_color%}$(git prompt 2>/dev/null) %# "
+fi

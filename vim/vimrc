@@ -1,0 +1,196 @@
+" ==============================================================================
+" ⌨️ Self-Contained Vim / Neovim Configuration (Zero External Plugin Required)
+" Location: ~/.vimrc
+" Compatible with: Vim 8+, Neovim
+" ==============================================================================
+
+" --- General Settings ---
+set nocompatible
+filetype plugin indent on
+syntax on
+
+set encoding=utf-8
+set fileencodings=utf-8,latin1
+set hidden
+set nobackup
+set nowritebackup
+set noswapfile
+set autoread
+set updatetime=300
+set timeoutlen=500
+set backspace=indent,eol,start
+set mouse=a
+
+" Include local repository path for vendored colors & runtime
+set runtimepath+=~/terminal-setup/vim
+
+" --- UI & Aesthetics ---
+set number
+set relativenumber
+set cursorline
+set showcmd
+set showmode
+set wildmenu
+set wildmode=longest,list,full
+set scrolloff=8
+set sidescrolloff=8
+set signcolumn=yes
+
+" Enable 24-bit TrueColor
+if has("termguicolors")
+  set termguicolors
+endif
+
+set background=dark
+
+" Load Gruvbox theme if available, fallback to tokyonight / habamax
+silent! colorscheme gruvbox
+if !exists("g:colors_name")
+  silent! colorscheme tokyonight
+  if !exists("g:colors_name")
+    colorscheme habamax
+  endif
+endif
+
+" --- Search & Fuzzy File Navigation ---
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+
+" Enable recursive file search in project for :find
+set path+=**
+set wildignore+=*/.git/*,*/node_modules/*,*/vendor/*,*/tmp/*,*.so,*.swp,*.zip
+
+" Use ripgrep (rg) if installed on system for lightning fast text searching
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  set grepformat=%f:%l:%c:%m
+endif
+
+" Custom Clean Quickfix List Formatter (Telescope / FZF style)
+function! QuickfixFormat(info)
+  let l:items = getqflist({'id': a:info.id, 'items': 1}).items
+  let l:lines = []
+  for l:idx in range(a:info.start_idx - 1, a:info.end_idx - 1)
+    let l:item = l:items[l:idx]
+    if l:item.bufnr > 0
+      let l:fname = fnamemodify(bufname(l:item.bufnr), ':~:.')
+      if len(l:fname) > 38
+        let l:fname = '...' . l:fname[len(l:fname)-35:]
+      endif
+      let l:line = printf(' %-38s │ %4d:%-2d │ %s', l:fname, l:item.lnum, l:item.col, trim(l:item.text))
+    else
+      let l:line = l:item.text
+    endif
+    call add(l:lines, l:line)
+  endfor
+  return l:lines
+endfunction
+
+if has("patch-8.2.0869") || has("nvim-0.5")
+  set quickfixtextfunc=QuickfixFormat
+endif
+
+" --- Indentation & Formatting ---
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set smartindent
+set autoindent
+set wrap
+
+" --- Keybindings ---
+let mapleader = " "
+
+" Clear search highlights with <Leader>ch
+nnoremap <Leader>ch :nohlsearch<CR>
+
+" Window Navigation using Space + Arrow Keys or Space + h/j/k/l or Ctrl + Arrow Keys
+nnoremap <Leader><Left>  <C-w>h
+nnoremap <Leader><Down>  <C-w>j
+nnoremap <Leader><Up>    <C-w>k
+nnoremap <Leader><Right> <C-w>l
+
+nnoremap <C-Left>  <C-w>h
+nnoremap <C-Down>  <C-w>j
+nnoremap <C-Up>    <C-w>k
+nnoremap <C-Right> <C-w>l
+
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>l <C-w>l
+
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Window Splitting
+nnoremap <Leader>sv :vsplit<CR>
+nnoremap <Leader>sh :split<CR>
+
+" Netrw File Explorer Toggle (<Leader>e)
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_winsize = 25
+nnoremap <Leader>e :Lexplore<CR>
+
+" --- Search Keybindings (Files & Text) ---
+" <Leader>ff: Search file by name (:find <Tab> auto-completes paths)
+nnoremap <Leader>ff :find 
+
+" <Leader>fg: Live grep text in project (:grep)
+nnoremap <Leader>fg :grep! 
+
+" <Leader>fw: Grep word under cursor across project
+nnoremap <Leader>fw :grep! <cword><CR>
+
+" Quickfix Window Navigation (for grep results) - Height set to 14 lines
+nnoremap <Leader>co :copen 14<CR>
+nnoremap <Leader>cc :cclose<CR>
+nnoremap <Leader>cn :cnext<CR>
+nnoremap <Leader>cp :cprevious<CR>
+
+" Markdown Live Preview with Mermaid.js rendering (<Leader>mp)
+nnoremap <Leader>mp :!mdpreview %<CR>
+
+" Command-line history navigation with Arrow Keys
+cnoremap <Up> <C-p>
+cnoremap <Down> <C-n>
+
+" Quick Save / Quit
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>q :q<CR>
+
+" --- Custom Pure Statusline (Gruvbox Dark Palette) ---
+function! GitBranch()
+  let l:branch = system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+  return strlen(l:branch) > 0 ? '  ' . l:branch : ''
+endfunction
+
+set laststatus=2
+set statusline=
+set statusline+=%#PmenuSel#\ %M%t\ %#LineNr#
+set statusline+=%{GitBranch()}
+set statusline+=%#CursorLine#\ %r%h%w
+set statusline+=%=
+set statusline+=%#Pmenu#\ %Y\ 
+set statusline+=%#PmenuSel#\ %l:%c\ (%p%%)\ 
+
+" --- Autocommands ---
+augroup CustomAutocmds
+  autocmd!
+  " Strip trailing whitespace on save
+  autocmd BufWritePre * %s/\s\+$//e
+  " Highlight line on active window
+  autocmd WinEnter * set cursorline
+  autocmd WinLeave * set nocursorline
+  " Automatically open Quickfix window (height 14 lines) when grep finds matches
+  autocmd QuickFixCmdPost [^l]* cwindow 14
+  " Inside Quickfix: pressing 'q' closes the quickfix window
+  autocmd FileType qf nnoremap <buffer> q :cclose<CR>
+augroup END
