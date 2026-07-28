@@ -10,10 +10,34 @@ elif [ -x "/usr/local/bin/brew" ]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-export PATH="$HOME/.local/bin:$HOME/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
+# Export user-space binary directories ($PATH)
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.antigravity/antigravity/bin:$HOME/.opencode/bin:$HOME/.bun/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
+
+if command -v go >/dev/null 2>&1; then
+  export PATH="$PATH:$(go env GOPATH 2>/dev/null)/bin"
+fi
+
 export COLORTERM="truecolor"
 export EDITOR="vim"
 export VISUAL="vim"
+
+# --- Version Managers & Tools (NVM, Bun, Cargo, SDKMAN) ---
+export BUN_INSTALL="$HOME/.bun"
+
+# Rust / Cargo
+[ -s "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+# NVM (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Bun Completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# SDKMAN
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # --- ZSH Native Autocomplete & Tab Completion ---
 autoload -U compinit && compinit -C
@@ -93,6 +117,27 @@ fi
 if command -v bat >/dev/null 2>&1; then
   alias cat="bat"
 fi
+
+# Git Aliases
+alias gc="git checkout"
+alias gcb="git checkout -b"
+alias gcm="git commit -m"
+alias gp="git fetch -p && git pull"
+alias gm="git merge"
+alias gr="git rebase"
+alias gb="git branch"
+alias gs="git stash"
+alias ga="git add"
+alias gps="git push"
+
+# Tmux Aliases
+alias tls="tmux ls"
+alias tk="tmux kill-session -t"
+
+# Kubectl Aliases
+alias kdp="kubectl describe pod"
+alias kgs="kubectl get svc"
+alias kgp="kubectl get pods"
 
 # --- TMUX Smart Session Launcher ---
 tm() {
