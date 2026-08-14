@@ -1,36 +1,123 @@
 #!/usr/bin/env bash
-# Markdown & Mermaid.js Browser Previewer
-# Usage: mdpreview <file.md>
+# Markdown & Mermaid.js Browser Previewer — OpenSpec-aware
+# Usage: mdpreview <file.md|dir>
+set -euo pipefail
 
 TARGET="${1:-README.md}"
 
-if [ ! -f "$TARGET" ]; then
-  echo "File not found: $TARGET"
+if [ ! -e "$TARGET" ]; then
+  echo "Not found: $TARGET" >&2
   exit 1
 fi
 
-TMP_HTML="/tmp/md_preview_$$.html"
-B64_CONTENT=$(base64 < "$TARGET" | tr -d '\r\n')
+abspath() {
+  if [ -d "$1" ]; then
+    (cd "$1" && pwd)
+  else
+    echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+  fi
+}
+TARGET="$(abspath "$TARGET")"
 
-cat <<'HTML_EOF' > "$TMP_HTML"
+if [ -d "$TARGET" ]; then
+  START_DIR="$TARGET"
+else
+  START_DIR="$(dirname "$TARGET")"
+fi
+
+# Walk up looking for an OpenSpec change root
+find_change_root() {
+  local dir="$1"
+  while [ -n "$dir" ] && [ "$dir" != "/" ]; do
+    if [ -f "$dir/.openspec.yaml" ] || [ -f "$dir/proposal.md" ]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
+CHANGE_ROOT="$(find_change_root "$START_DIR" || true)"
+
+if [ -n "$CHANGE_ROOT" ]; then
+  ROOT="$CHANGE_ROOT"
+elif [ -d "$TARGET" ]; then
+  ROOT="$TARGET"
+else
+  ROOT=""
+fi
+
+FILES=()
+if [ -n "$ROOT" ]; then
+  CHANGE_NAME="$(basename "$ROOT")"
+  for f in proposal.md design.md; do
+    [ -f "$ROOT/$f" ] && FILES+=("$ROOT/$f")
+  done
+  if [ -d "$ROOT/specs" ]; then
+    while IFS= read -r f; do FILES+=("$f"); done < <(find "$ROOT/specs" -type f -name "*.md" | sort)
+  fi
+  [ -f "$ROOT/tasks.md" ] && FILES+=("$ROOT/tasks.md")
+  while IFS= read -r f; do
+    already=0
+    for existing in "${FILES[@]+"${FILES[@]}"}"; do
+      [ "$f" = "$existing" ] && already=1 && break
+    done
+    [ "$already" -eq 0 ] && FILES+=("$f")
+  done < <(find "$ROOT" -type f -name "*.md" | sort)
+else
+  FILES=("$TARGET")
+  CHANGE_NAME="$(basename "$TARGET" .md)"
+fi
+
+TITLE="$CHANGE_NAME"
+
+COMBINED_MD=""
+for f in "${FILES[@]}"; do
+  if [ -n "$ROOT" ]; then
+    rel="${f#"$ROOT"/}"
+  else
+    rel="$(basename "$f")"
+  fi
+  COMBINED_MD+=$'\n'"## ${rel}"$'\n\n'"$(cat "$f")"$'\n\n'
+done
+
+SAFE_NAME="$(echo "$CHANGE_NAME" | tr -c 'A-Za-z0-9._-' '-')"
+HASH_SRC="${ROOT:-$TARGET}"
+HASH="$(printf '%s' "$HASH_SRC" | md5 -q 2>/dev/null || printf '%s' "$HASH_SRC" | md5sum | cut -d' ' -f1)"
+HTML_PATH="/tmp/mdpreview-${SAFE_NAME}-${HASH}.html"
+
+B64_CONTENT=$(printf '%s' "$COMBINED_MD" | base64 | tr -d '\r\n')
+
+cat <<HTML_EOF > "$HTML_PATH"
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Markdown & Mermaid Preview</title>
+  <title>${TITLE}</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-dark.min.css">
   <style>
-    body { background-color: #1a1b26; color: #c0caf5; padding: 2rem; max-width: 950px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { margin: 0; display: flex; background-color: #1a1b26; color: #c0caf5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    #sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; overflow-y: auto; background: #16161e; border-right: 1px solid #2a2e42; padding: 1rem; box-sizing: border-box; }
+    #sidebar a { display: block; color: #7dcfff; text-decoration: none; padding: 2px 0; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #sidebar a:hover { text-decoration: underline; }
+    #sidebar a.toc-level-1 { font-weight: bold; margin-top: 0.75rem; color: #c0caf5; }
+    #sidebar a.toc-level-2 { padding-left: 0.75rem; }
+    #sidebar a.toc-level-3 { padding-left: 1.5rem; opacity: 0.85; }
+    #main { margin-left: 280px; padding: 2rem; max-width: 900px; }
     .markdown-body { background-color: #1a1b26; color: #c0caf5; }
     .markdown-body pre { background-color: #24283b; }
     .markdown-body code { background-color: #24283b; color: #7dcfff; }
     .mermaid { background-color: #24283b; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; text-align: center; }
   </style>
 </head>
-<body class="markdown-body">
-  <div id="content"></div>
+<body>
+  <nav id="sidebar"></nav>
+  <div id="main">
+    <div id="content" class="markdown-body"></div>
+  </div>
   <script>
     mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
 
@@ -42,8 +129,7 @@ cat <<'HTML_EOF' > "$TMP_HTML"
 
     const rawMarkdown = b64DecodeUnicode("__B64_PLACEHOLDER__");
     document.getElementById('content').innerHTML = marked.parse(rawMarkdown);
-    
-    // Replace \n inside mermaid code blocks with <br/> for Mermaid 11 compatibility
+
     document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
       const parent = block.parentElement;
       const mermaidDiv = document.createElement('div');
@@ -52,14 +138,123 @@ cat <<'HTML_EOF' > "$TMP_HTML"
       mermaidDiv.innerHTML = cleanText;
       parent.replaceWith(mermaidDiv);
     });
-    
+
     mermaid.run();
+
+    (function buildTOC() {
+      const content = document.getElementById('content');
+      const sidebar = document.getElementById('sidebar');
+      const headings = content.querySelectorAll('h1, h2, h3');
+      headings.forEach((h, i) => {
+        if (!h.id) h.id = 'heading-' + i;
+        const link = document.createElement('a');
+        link.href = '#' + h.id;
+        link.textContent = h.textContent;
+        link.className = 'toc-level-' + h.tagName.substring(1);
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        sidebar.appendChild(link);
+      });
+    })();
   </script>
 </body>
 </html>
 HTML_EOF
 
-# Replace placeholder with Base64 content
-sed -i '' "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$TMP_HTML" 2>/dev/null || sed -i "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$TMP_HTML"
+sed -i '' "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$HTML_PATH" 2>/dev/null || sed -i "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$HTML_PATH"
 
-open "$TMP_HTML"
+open_in_browser() {
+  local html_path="$1"
+  local file_url="file://${html_path// /%20}"
+  local result
+
+  result=$(osascript - "$file_url" <<'APPLESCRIPT' 2>/dev/null || true
+on run argv
+  set targetURL to item 1 of argv
+  try
+    tell application "System Events"
+      if not (exists process "Google Chrome") then return "not_running"
+    end tell
+  on error
+    return "not_running"
+  end try
+  tell application "Google Chrome"
+    set found to false
+    repeat with w in windows
+      set tabIndex to 0
+      repeat with t in tabs of w
+        set tabIndex to tabIndex + 1
+        if (URL of t) starts with targetURL then
+          set URL of t to targetURL
+          set active tab index of w to tabIndex
+          set index of w to 1
+          set found to true
+          exit repeat
+        end if
+      end repeat
+      if found then exit repeat
+    end repeat
+    if not found then
+      if (count of windows) = 0 then
+        make new window
+      end if
+      tell window 1 to make new tab with properties {URL:targetURL}
+    end if
+    activate
+  end tell
+  return "ok"
+end run
+APPLESCRIPT
+)
+  [ "$result" = "ok" ] && return 0
+
+  result=$(osascript - "$file_url" <<'APPLESCRIPT' 2>/dev/null || true
+on run argv
+  set targetURL to item 1 of argv
+  try
+    tell application "System Events"
+      if not (exists process "Safari") then return "not_running"
+    end tell
+  on error
+    return "not_running"
+  end try
+  tell application "Safari"
+    set found to false
+    repeat with w in windows
+      set tabIndex to 0
+      repeat with t in tabs of w
+        set tabIndex to tabIndex + 1
+        if (URL of t) starts with targetURL then
+          set URL of t to targetURL
+          set current tab of w to t
+          set index of w to 1
+          set found to true
+          exit repeat
+        end if
+      end repeat
+      if found then exit repeat
+    end repeat
+    if not found then
+      if (count of windows) = 0 then
+        make new document with properties {URL:targetURL}
+      else
+        tell window 1
+          set newTab to make new tab with properties {URL:targetURL}
+          set current tab of window 1 to newTab
+        end tell
+      end if
+    end if
+    activate
+  end tell
+  return "ok"
+end run
+APPLESCRIPT
+)
+  [ "$result" = "ok" ] && return 0
+
+  open "$html_path"
+}
+
+open_in_browser "$HTML_PATH"

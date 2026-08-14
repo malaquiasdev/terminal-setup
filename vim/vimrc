@@ -159,7 +159,7 @@ nnoremap <Leader>cn :cnext<CR>
 nnoremap <Leader>cp :cprevious<CR>
 
 " Markdown Live Preview with Mermaid.js rendering (<Leader>mp)
-nnoremap <Leader>mp :!mdpreview %<CR>
+nnoremap <Leader>mp :execute '!mdpreview ' . shellescape(expand('%:p'), 1)<CR>
 
 " Command-line history navigation with Arrow Keys
 cnoremap <Up> <C-p>
