@@ -22,7 +22,7 @@ ln -sf ~/terminal-setup/vim ~/.vim
 - **Project File Search:** `<Space> + ff` opens `:find` with recursive path completion (`<Tab>`).
 - **Project Text Search (Ripgrep):** `<Space> + fg` (live grep) and `<Space> + fw` (word under cursor).
 - **Telescope-Style Quickfix List:** Formatted 3-column aligned layout (`filename │ line:col │ text`), compact 14-line height (`q` to close, `Enter` to jump).
-- **Markdown & Mermaid.js Preview:** `<Space> + mp` renders current Markdown & Mermaid.js diagrams live in browser.
+- **Markdown & Mermaid.js Preview:** `<Space> + mp` renders the current Markdown & Mermaid.js diagrams live in browser. Inside an OpenSpec change, it combines all of the change's `.md` files into one page with a sidebar TOC and reuses the existing browser tab.
 - **File Explorer:** Native `netrw` tree sidebar toggled via `<Space> + e`.
 - **Formatting:** Automatic trailing whitespace cleanup on save.
 

@@ -1,4 +1,4 @@
-# 🌌 Terminal Setup — Ghostty + Vim + TMUX (Gruvbox Edition)
+# 🌌 Terminal Setup — Ghostty + Vim + TMUX (Catppuccin Frappe Edition)
 
 **A high-performance, aesthetically pleasing, zero-dependency development environment optimized for restricted corporate environments, firewalls, and proxy networks.**
 
@@ -6,7 +6,7 @@
 
 ## 🎨 Aesthetics & Stack
 
-- **Theme:** [Gruvbox Dark](https://github.com/morhetz/gruvbox) — Earthy, warm palette designed for high legibility during long coding sessions.
+- **Theme:** [Catppuccin Frappe](https://github.com/catppuccin/catppuccin) — Soft pastel palette designed for high legibility during long coding sessions (falls back to Gruvbox Dark, then Tokyo Night, if unavailable).
 - **Font:** [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) (Size 15) with fallback monospace fonts.
 - **Terminal:** [Ghostty](https://github.com/ghostty-org/ghostty) with 24-bit TrueColor support (`COLORTERM=truecolor`).
 - **Multiplexer:** TMUX (Standalone, zero-TPM runtime dependency).
@@ -47,7 +47,7 @@ Each tool is isolated in its dedicated directory containing configuration files 
 ### 1. Clone & Link Configurations
 
 ```bash
-git clone -b ghostty-vim-tmux https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
+git clone https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
 cd ~/terminal-setup
 
 # Link application configurations
@@ -80,12 +80,12 @@ ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
 - **File Search:** `<Space> ff` to search files by name (`:find <Tab>`).
 - **Text Search (Ripgrep):** `<Space> fg` to live grep project text, `<Space> fw` to grep word under cursor.
 - **Telescope-Style Quickfix:** Aligned, clean search results list with automatic 14-line height (`q` to close).
-- **Mermaid.js Preview:** `<Space> mp` to open live rendered Markdown & Mermaid.js diagrams in browser.
+- **Markdown Preview:** `<Space> mp` to preview the current file's rendered Markdown & Mermaid.js diagrams in the browser. Inside an OpenSpec change (a directory with `.openspec.yaml` or `proposal.md`), it combines every `.md` in the change (`proposal.md` → `design.md` → `specs/**/*.md` → `tasks.md` → others) into one page with a sidebar table of contents, reusing the same browser tab instead of opening a new one per file.
 
 ### 🐚 ZSH Shell & Proxy Helpers
 - **Corporate Proxy:** `setproxy <url>`, `showproxy`, `unsetproxy`.
 - **Smart Launcher:** `tm` (creates or attaches to TMUX session).
-- **Markdown Previewer:** `mdpreview <file.md>` (renders Markdown + Mermaid.js in browser).
+- **Markdown Previewer:** `mdpreview <file.md|dir>` (renders Markdown + Mermaid.js in browser; auto-combines an OpenSpec change's files into one page and reuses the existing browser tab).
 
 ---
 
@@ -97,4 +97,4 @@ ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
 - 🐚 [ZSH & Proxy Helper Guide](zsh/README.md)
 
 ---
-*Maintained with ❤️ by [malaquiasdev](https://github.com/malaquiasdev) • Branch: `ghostty-vim-tmux`*
+*Maintained with ❤️ by [malaquiasdev](https://github.com/malaquiasdev) • Branch: `main`*
