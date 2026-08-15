@@ -89,7 +89,12 @@ HTML_PATH="/tmp/mdpreview-${SAFE_NAME}-${HASH}.html"
 
 B64_CONTENT=$(printf '%s' "$COMBINED_MD" | base64 | tr -d '\r\n')
 
-cat <<HTML_EOF > "$HTML_PATH"
+# Write the base64 payload straight into the file instead of templating it in
+# via sed: base64's own alphabet (A-Za-z0-9+/=) contains the `/` sed used as
+# its s/// delimiter, so any sizeable file eventually breaks the substitution
+# ("invalid command code" from whatever byte follows the stray `/`).
+{
+cat <<HTML_HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,7 +132,9 @@ cat <<HTML_EOF > "$HTML_PATH"
       }).join(''));
     }
 
-    const rawMarkdown = b64DecodeUnicode("__B64_PLACEHOLDER__");
+HTML_HEAD
+printf '    const rawMarkdown = b64DecodeUnicode("%s");\n' "$B64_CONTENT"
+cat <<HTML_TAIL
     document.getElementById('content').innerHTML = marked.parse(rawMarkdown);
 
     document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
@@ -161,9 +168,8 @@ cat <<HTML_EOF > "$HTML_PATH"
   </script>
 </body>
 </html>
-HTML_EOF
-
-sed -i '' "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$HTML_PATH" 2>/dev/null || sed -i "s/__B64_PLACEHOLDER__/$B64_CONTENT/g" "$HTML_PATH"
+HTML_TAIL
+} > "$HTML_PATH"
 
 open_in_browser() {
   local html_path="$1"

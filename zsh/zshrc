@@ -66,16 +66,8 @@ elif [ -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; th
   source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
-# --- Markdown & Mermaid.js Preview Helper ---
-mdpreview() {
-  local target="${1:-README.md}"
-  if command -v npx >/dev/null 2>&1; then
-    npx -y vmd "$target" 2>/dev/null || npx -y gh-markdown-preview "$target"
-  else
-    echo "Opening $target..."
-    open "$target"
-  fi
-}
+# mdpreview: see ~/.local/bin/mdpreview (OpenSpec-aware, renders Mermaid via
+# a real browser tab instead of vmd/gh-markdown-preview — both were broken).
 
 # --- Corporate Proxy Helper Functions ---
 DEFAULT_PROXY=""
