@@ -1,4 +1,4 @@
-# ⌨️ Vim / Neovim Configuration (Catppuccin Frappe Edition)
+# ⌨️ Vim / Neovim Configuration (Catppuccin Latte Edition)
 
 A zero-external-dependency, self-contained configuration for **Vim 8+** and **Neovim**, pre-configured for modern TypeScript, project searching, and visual Markdown previews.
 
@@ -7,8 +7,8 @@ A zero-external-dependency, self-contained configuration for **Vim 8+** and **Ne
 ## 🛠️ Installation
 
 ```bash
-ln -sf ~/terminal-setup/vim/vimrc ~/.vimrc
-ln -sf ~/terminal-setup/vim ~/.vim
+ln -sf ~/Developer/me/terminal-setup/vim/vimrc ~/.vimrc
+ln -sf ~/Developer/me/terminal-setup/vim ~/.vim
 ```
 
 ---
@@ -16,7 +16,7 @@ ln -sf ~/terminal-setup/vim ~/.vim
 ## ✨ Features & Settings
 
 - **Leader Key:** Space (`<Space>`).
-- **Theme:** Offline **Catppuccin Frappe** (`colorscheme catppuccin_frappe`) with fallback to Gruvbox Dark, then Tokyo Night.
+- **Theme:** Offline **Catppuccin Latte** (`colorscheme catppuccin_latte`, light background) with fallback to Gruvbox Dark, then Tokyo Night.
 - **TypeScript & TSX Support:** Built-in offline syntax highlighting definitions for `.ts` and `.tsx` files.
 - **Ergonomic Window Navigation:** Navigate split windows effortlessly using `<Space> + Arrow Keys` or `<Space> + h/j/k/l`.
 - **Project File Search:** `<Space> + ff` opens `:find` with recursive path completion (`<Tab>`).
