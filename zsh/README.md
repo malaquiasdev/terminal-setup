@@ -7,7 +7,7 @@ Resilient ZSH configuration with built-in tab completion, auto-suggestions, synt
 ## 🛠️ Installation
 
 ```bash
-ln -sf ~/terminal-setup/zsh/zshrc ~/.zshrc
+ln -sf ~/Developer/me/terminal-setup/zsh/zshrc ~/.zshrc
 ```
 
 ---
@@ -32,5 +32,5 @@ ln -sf ~/terminal-setup/zsh/zshrc ~/.zshrc
 
 ## ⚡ Smart Utility Functions
 
-- **`tm [session_name]`**: Connects to an existing TMUX session or creates a new session named `session_name` (defaults to `main`).
+- **`tm [session_name]`**: Without a name, opens the TMUX `home` dashboard (see `tmux/README.md`). With a name, attaches to that session or creates it.
 - **Resilient Aliases**: Automatically degrades to system `ls` / `cat` if modern CLI replacements (`eza`, `bat`) are missing.

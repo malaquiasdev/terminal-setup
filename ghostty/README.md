@@ -8,7 +8,7 @@ Configuration for [Ghostty](https://github.com/ghostty-org/ghostty), a fast, fea
 
 ```bash
 mkdir -p ~/.config/ghostty
-ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
+ln -sf ~/Developer/me/terminal-setup/ghostty/config ~/.config/ghostty/config
 ```
 
 ---
@@ -16,7 +16,7 @@ ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
 ## ✨ Features & Settings
 
 - **Font:** JetBrainsMono Nerd Font (Size 15) with fallback system monospace fonts.
-- **Theme:** Catppuccin Frappe with 0.95 opacity & background blur.
+- **Theme:** Catppuccin Latte with 0.95 opacity & background blur.
 - **Titlebar:** Transparent macOS style with custom 12px inner padding.
 - **Cursor:** Block style in orange accent (`#fe8019`).
 
