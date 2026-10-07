@@ -1,4 +1,4 @@
-# 🌌 Terminal Setup — Ghostty + Vim + TMUX (Catppuccin Frappe Edition)
+# 🌌 Terminal Setup — Ghostty + Vim + TMUX (Catppuccin Latte Edition)
 
 **A high-performance, aesthetically pleasing, zero-dependency development environment optimized for restricted corporate environments, firewalls, and proxy networks.**
 
@@ -6,11 +6,11 @@
 
 ## 🎨 Aesthetics & Stack
 
-- **Theme:** [Catppuccin Frappe](https://github.com/catppuccin/catppuccin) — Soft pastel palette designed for high legibility during long coding sessions (falls back to Gruvbox Dark, then Tokyo Night, if unavailable).
+- **Theme:** [Catppuccin Latte](https://github.com/catppuccin/catppuccin) — Light pastel palette for Ghostty, Vim and mdpreview; the TMUX status bar stays Gruvbox (falls back to Gruvbox Dark, then Tokyo Night, if unavailable).
 - **Font:** [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads) (Size 15) with fallback monospace fonts.
 - **Terminal:** [Ghostty](https://github.com/ghostty-org/ghostty) with 24-bit TrueColor support (`COLORTERM=truecolor`).
 - **Multiplexer:** TMUX (Standalone, zero-TPM runtime dependency).
-- **Editor:** Vim 8+ / Neovim (Pure Vim config, offline themes & TypeScript support).
+- **Editor:** Neovim (`vi`, `vim` and `$EDITOR` point to `nvim`); the Pure Vim config is still shipped in `vim/`.
 - **Shell:** ZSH (Native `compinit` autocomplete, autosuggestions, syntax-highlighting & proxy helpers).
 
 ---
@@ -22,15 +22,15 @@ Each tool is isolated in its dedicated directory containing configuration files 
 ```text
 .
 ├── ghostty/
-│   ├── config        # Native Ghostty configuration (Gruvbox Dark)
+│   ├── config        # Native Ghostty configuration (Catppuccin Latte)
 │   └── README.md     # Ghostty documentation & keybindings
 ├── tmux/
-│   ├── tmux.conf     # Standalone TMUX configuration (Gruvbox status bar)
+│   ├── tmux.conf     # TMUX config, home dashboard (picker.sh), Claude notifications
 │   ├── preview.sh    # Floating preview popup script
 │   └── README.md     # TMUX keybindings & preview popup guide
 ├── vim/
 │   ├── vimrc         # Pure Vim/Neovim configuration
-│   ├── colors/       # Vendored offline themes (Gruvbox Dark, Tokyo Night)
+│   ├── colors/       # Vendored offline themes (Catppuccin Latte/Frappe, Gruvbox Dark, Tokyo Night)
 │   ├── syntax/       # Offline TypeScript & TSX syntax definitions
 │   └── README.md     # Vim keybindings & search guide
 ├── zsh/
@@ -47,22 +47,22 @@ Each tool is isolated in its dedicated directory containing configuration files 
 ### 1. Clone & Link Configurations
 
 ```bash
-git clone https://github.com/malaquiasdev/terminal-setup.git ~/terminal-setup
-cd ~/terminal-setup
+git clone https://github.com/malaquiasdev/terminal-setup.git ~/Developer/me/terminal-setup
+cd ~/Developer/me/terminal-setup
 
 # Link application configurations
-ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
-ln -sf ~/terminal-setup/vim/vimrc ~/.vimrc
-ln -sf ~/terminal-setup/zsh/zshrc ~/.zshrc
-ln -sf ~/terminal-setup/vim ~/.vim
+ln -sf ~/Developer/me/terminal-setup/tmux/tmux.conf ~/.tmux.conf
+ln -sf ~/Developer/me/terminal-setup/vim/vimrc ~/.vimrc
+ln -sf ~/Developer/me/terminal-setup/zsh/zshrc ~/.zshrc
+ln -sf ~/Developer/me/terminal-setup/vim ~/.vim
 
 # Link local binary scripts
 mkdir -p ~/.local/bin
-ln -sf ~/terminal-setup/zsh/mdpreview ~/.local/bin/mdpreview
+ln -sf ~/Developer/me/terminal-setup/zsh/mdpreview ~/.local/bin/mdpreview
 
 # Link Ghostty configuration (if Ghostty is installed)
 mkdir -p ~/.config/ghostty
-ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
+ln -sf ~/Developer/me/terminal-setup/ghostty/config ~/.config/ghostty/config
 ```
 
 ---
@@ -84,7 +84,7 @@ ln -sf ~/terminal-setup/ghostty/config ~/.config/ghostty/config
 
 ### 🐚 ZSH Shell & Proxy Helpers
 - **Corporate Proxy:** `setproxy <url>`, `showproxy`, `unsetproxy`.
-- **Smart Launcher:** `tm` (creates or attaches to TMUX session).
+- **Smart Launcher:** `tm` opens the TMUX `home` dashboard; `tm <name>` creates or attaches to a session.
 - **Markdown Previewer:** `mdpreview <file.md|dir>` (renders Markdown + Mermaid.js in browser; auto-combines an OpenSpec change's files into one page and reuses the existing browser tab).
 
 ---
