@@ -140,7 +140,11 @@ alias kgp="kubectl get pods"
 
 # --- TMUX Smart Session Launcher ---
 tm() {
-  local session_name="${1:-main}"
+  if [ -z "$1" ]; then
+    tmux new-session -A -s home "$HOME/Developer/me/terminal-setup/tmux/picker.sh home"
+    return
+  fi
+  local session_name="$1"
   if tmux has-session -t "$session_name" 2>/dev/null; then
     tmux attach-session -t "$session_name"
   else
