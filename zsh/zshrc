@@ -18,8 +18,8 @@ if command -v go >/dev/null 2>&1; then
 fi
 
 export COLORTERM="truecolor"
-export EDITOR="vim"
-export VISUAL="vim"
+export EDITOR="nvim"
+export VISUAL="nvim"
 
 # --- Version Managers & Tools (NVM, Bun, Cargo, SDKMAN) ---
 export BUN_INSTALL="$HOME/.bun"
@@ -98,9 +98,9 @@ showproxy() {
   echo "NO_PROXY    = ${no_proxy:-none}"
 }
 
-# --- Resilient Tool Aliases (Pure Vim for vim, nvim for Neovim) ---
-alias vi="vim -u ~/.vimrc"
-alias vim="vim -u ~/.vimrc"
+# --- Editor: nvim para tudo (vim/vi sao alias) ---
+alias vi="nvim"
+alias vim="nvim"
 
 if command -v eza >/dev/null 2>&1; then
   alias ls="eza --icons"
@@ -140,7 +140,11 @@ alias kgp="kubectl get pods"
 
 # --- TMUX Smart Session Launcher ---
 tm() {
-  local session_name="${1:-main}"
+  if [ -z "$1" ]; then
+    tmux new-session -A -s home "$HOME/Developer/me/terminal-setup/tmux/picker.sh home"
+    return
+  fi
+  local session_name="$1"
   if tmux has-session -t "$session_name" 2>/dev/null; then
     tmux attach-session -t "$session_name"
   else
@@ -158,3 +162,8 @@ else
   autoload -U colors && colors
   PROMPT="%{$fg[cyan]%}%n@%m%{$reset_color%}:%{$fg[blue]%}%~%{$reset_color%}$(git prompt 2>/dev/null) %# "
 fi
+alias nvim-old='NVIM_APPNAME=nvim.bak nvim'
+
+# podman as docker backend (Supabase CLI etc.)
+export DOCKER_HOST="unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}' 2>/dev/null)"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"

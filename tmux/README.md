@@ -1,75 +1,111 @@
 # 🪟 TMUX Configuration
 
-A self-contained **TMUX** configuration focused on high performance, ergonomics, and seamless compatibility with the **Ghostty** terminal, requiring zero third-party plugin downloads or network connectivity.
+A **TMUX** setup tuned for **Ghostty**: a full-screen session dashboard (`home`), lazygit-style pickers with live preview, Claude Code awareness, and sessions that survive a reboot.
 
 ---
 
 ## 🛠️ Installation
 
 ```bash
-ln -sf ~/terminal-setup/tmux/tmux.conf ~/.tmux.conf
+ln -sf ~/Developer/me/terminal-setup/tmux/tmux.conf ~/.tmux.conf
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
+Inside tmux, press `Ctrl + a` then `I` to install the plugins ([tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect) and [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum)).
+
+Dependencies: `fzf` (pickers and `home`), `jq` (Claude notifications), `lazygit` (optional popup).
+
+The `tm` function in `zsh/zshrc` opens the `home` dashboard; `tm <name>` attaches to (or creates) a session directly.
+
 ---
 
-## ⚡ Quick Keybindings Reference
+## 🏠 Home Dashboard
 
-Primary Prefix: **`Ctrl + a`**
+`home` is a dedicated session running `picker.sh home` full screen: sessions on the left, a live preview of the selected one on the right (refreshes every second, every split shown).
 
-### 1. Window & Session Management
+Each row shows the session name, Claude Code state (`⚙ trabalhando`, `● esperando você`, or the running program), context used (`ctx 162.7k`), window count, and listening ports (`:3000`). The border shows the Claude usage quota.
+
+| Key | Action |
+| --- | --- |
+| `Enter` | Switch to the selected session |
+| `Ctrl + x` | Kill the selected session (asks `[s/N]`) |
+| `Ctrl + r` | Refresh now (it also refreshes every 3s) |
+| `Ctrl + a` then `H` | Go back to `home` from anywhere |
+
+---
+
+## ⚡ Keybindings
+
+Primary prefix: **`Ctrl + a`**
+
+### Sessions & Windows
 
 | Shortcut | Action |
 | --- | --- |
-| `Ctrl + a` then `c` | Create a new window (tab) in current directory path |
-| `Ctrl + a` then `w` | Open floating **Preview Popup** window picker (peek & select window without leaving current view) |
-| `Ctrl + a` then `p` | Open floating **Preview Popup** session picker (peek & select session) |
-| `Ctrl + a` then `,` | Rename the active window |
-| `Ctrl + a` then `1`..`9` | Switch directly to window number `1`..`9` |
-| `Ctrl + a` then `n` | Switch to **next** window |
-| `Ctrl + Shift + Left` | Move active window tab to the **left** |
-| `Ctrl + Shift + Right` | Move active window tab to the **right** |
-| `Ctrl + a` then `&` | Close current window |
+| `Ctrl + a` then `s` | Session picker (popup); `Enter` switches |
+| `Ctrl + a` then `p` | Session picker (popup); `Enter` peeks in a popup |
+| `Ctrl + a` then `w` | Window picker (popup); `Enter` peeks in a popup |
+| `Ctrl + a` then `S` / `g` | New session (asks for a name; switches if it exists) |
+| `Ctrl + a` then `L` | Back to the last session |
+| `Ctrl + a` then `A` | Pin the current window |
+| `Ctrl + a` then `a` | Open the pinned window in a popup |
+| `Ctrl + a` then `c` | New window in the current path |
+| `Ctrl + a` then `,` | Rename window |
+| `Ctrl + a` then `n` | Next window |
+| `Ctrl + Shift + Left/Right` | Move window left/right |
 
-### 2. Pane Management (Splits)
+### Panes
 
 | Shortcut | Action |
 | --- | --- |
-| `Ctrl + a` then `\` | Split window vertically (side-by-side), preserving current path |
-| `Ctrl + a` then `-` | Split window horizontally (top/bottom), preserving current path |
-| `Ctrl + a` then `h` | Focus pane to the **left** |
-| `Ctrl + a` then `j` | Focus pane **below** |
-| `Ctrl + a` then `k` | Focus pane **above** |
-| `Ctrl + a` then `l` | Focus pane to the **right** |
-| `Ctrl + a` then `r` | Reload configuration from `~/.tmux.conf` |
+| `Ctrl + a` then `\` | Split side by side |
+| `Ctrl + a` then `-` | Split top/bottom |
+| `Ctrl + a` then `h/j/k/l` or arrows | Move between panes (`Alt + arrows` without prefix) |
+| `Ctrl + a` then `q` | Show pane numbers (3s); press a number to jump |
+| `Ctrl + a` then `x` | Close pane |
+| `Ctrl + a` then `e` | Close every other pane |
+
+### Tools
+
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl + a` then `y` | Claude Code in a popup (one session per directory) |
+| `Ctrl + a` then `G` | lazygit in a popup |
+| `Ctrl + a` then `o` | Open the current path in Finder |
+| `Ctrl + a` then `Ctrl + s` / `Ctrl + r` | Save / restore sessions (auto-saved every 15 min) |
+| `Ctrl + a` then `r` | Reload config |
 
 ---
 
-## 🔍 Preview Popup Details
+## 🔔 Claude Code Notifications
 
-Pressing **`Ctrl + a` + `w`** or **`Ctrl + a` + `p`** opens a floating popup centered on your screen (`90% width/height`):
-- It renders a live scrollable preview of the selected session/window before switching.
-- Navigate the picker using `j` / `k` or arrow keys.
-- Press **`Enter`** to attach/switch to the target window/session.
-- Uses a grouped session (`_preview_PID`) under the hood so detaching or closing the popup doesn't disturb your current client workspace.
+`claude-notify.sh` is a Claude Code `Notification` hook. Add it to `~/.claude/settings.json`:
 
----
+```json
+{
+  "hooks": {
+    "Notification": [
+      { "hooks": [{ "type": "command", "command": "bash ~/Developer/me/terminal-setup/tmux/claude-notify.sh", "timeout": 5 }] }
+    ]
+  }
+}
+```
 
-## 📋 Copy Mode & System Clipboard (Vi-Mode)
-
-1. Press **`Ctrl + a` + `[`** to enter copy/scroll mode.
-2. Navigate using `h`, `j`, `k`, `l` (or mouse wheel).
-3. Press **`v`** to start visual text selection.
-4. Press **`y`** to yank selected text directly into the host system clipboard.
-
-> **Automatic OS Clipboard Integration:**
-> - **macOS:** Pipes copied selection to `pbcopy`.
-> - **Windows (WSL2):** Pipes copied selection to `clip.exe`.
-> - **Linux:** Pipes copied selection to `xclip`.
+When a Claude session needs you:
+- Ghostty shows a desktop notification titled with the session name (`[rdp] ...`).
+- If you are not looking at that session, a yellow `● rdp` badge appears in the status bar until you enter it.
 
 ---
 
-## 🎨 Interface & Styling (Tokyo Night)
+## 📋 Copy Mode
 
-- **24-bit TrueColor Support:** Enabled for crisp color rendering in Ghostty (`COLORTERM=truecolor`).
-- **Top Status Bar:** Displays active session name on the left, open window list in the center, and date, time, and hostname on the right.
-- **Mouse Support:** Fully enabled (click to switch panes, drag to resize, wheel to scroll history).
+1. `Ctrl + a` then `[` to enter copy mode.
+2. `v` to start selecting, `y` to copy to the system clipboard (`pbcopy`, `clip.exe` or `xclip`).
+
+---
+
+## 🎨 Interface
+
+- Gruvbox status bar on top; 24-bit color for `xterm-256color` and `xterm-ghostty`.
+- Closing the last pane of a session moves you to another session instead of detaching.
+- Mouse enabled; passthrough on so OSC notifications reach Ghostty.
