@@ -28,7 +28,7 @@ Each row shows the session name, Claude Code state (`⚙ trabalhando`, `● espe
 | Key | Action |
 | --- | --- |
 | `Enter` | Switch to the selected session |
-| `Ctrl + x` | Kill the selected session (asks `[s/N]`) |
+| `Ctrl + x` or `Ctrl + a` then `x` | Kill the selected session (asks `[s/N]`) |
 | `Ctrl + r` | Refresh now (it also refreshes every 3s) |
 | `Ctrl + a` then `H` | Go back to `home` from anywhere |
 
