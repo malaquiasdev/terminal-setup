@@ -19,21 +19,23 @@ session_status() {
   while IFS=$'\t' read -r pane command title; do
     is_claude "$command" "$title" || continue
     screen="$(tmux capture-pane -p -t "$pane" 2>/dev/null | awk 'NF' | tail -15)"
-    if grep -q 'esc to interrupt' <<<"$screen"; then
+    if grep -qE -e 'esc to interrupt' -e '^[^[:alnum:]]*[[:alpha:]]+… \([0-9]+[hms]' <<<"$screen"; then
       working=$((working + 1))
     else
       waiting=$((waiting + 1))
     fi
     [[ -n "$CTX" ]] || CTX="$(grep -oE 'Ctx:[^0-9]*[0-9.]+[kM]?' <<<"$screen" | tail -1 | grep -oE '[0-9.]+[kM]?$')"
   done < <(tmux list-panes -s -t "=$name" -F '#{pane_id}	#{pane_current_command}	#{pane_title}')
-  if ((working > 0)); then
+  if ((working > 0 && waiting > 0)); then
+    STATUS="⚙ $working trab · ● $waiting esp"
+  elif ((working > 0)); then
     STATUS='⚙ trabalhando'
   elif ((waiting > 0)); then
     STATUS='● esperando você'
   else
     STATUS="  $active_command"
   fi
-  ((working + waiting > 1)) && STATUS="$STATUS ×$((working + waiting))"
+  ((working == 0 || waiting == 0)) && ((working + waiting > 1)) && STATUS="$STATUS ×$((working + waiting))"
   [[ -n "$CTX" ]] && CTX="ctx $CTX"
 }
 
@@ -94,7 +96,7 @@ list_sessions() {
     while IFS=$'\t' read -r name windows command title; do
       session_status "$name" "$command"
       ports="$(awk -F'\t' -v s="$name" '$1 == s { print $2 }' <<<"$portmap")"
-      printf '%s\t%s %s %s %s jan  %s\n' "$name" "$(pad "$name" 20)" "$(pad "$STATUS" 19)" "$(pad "$CTX" 12)" "$windows" "$ports"
+      printf '%s\t%s %s %s %s jan  %s\n' "$name" "$(pad "$name" 20)" "$(pad "$STATUS" 21)" "$(pad "$CTX" 12)" "$windows" "$ports"
     done
 }
 
