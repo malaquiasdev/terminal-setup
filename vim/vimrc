@@ -26,7 +26,7 @@ set runtimepath+=~/terminal-setup/vim
 
 " --- UI & Aesthetics ---
 set number
-set relativenumber
+set norelativenumber
 set cursorline
 set showcmd
 set showmode
@@ -41,10 +41,10 @@ if has("termguicolors")
   set termguicolors
 endif
 
-set background=dark
+set background=light
 
 " Load Catppuccin Frappe theme if available, fallback to gruvbox / tokyonight / habamax
-silent! colorscheme catppuccin_frappe
+silent! colorscheme catppuccin_latte
 if !exists("g:colors_name")
   silent! colorscheme gruvbox
   if !exists("g:colors_name")
@@ -135,11 +135,16 @@ nnoremap <C-l> <C-w>l
 nnoremap <Leader>sv :vsplit<CR>
 nnoremap <Leader>sh :split<CR>
 
+" Mesmas teclas do Ghostty (super+d / super+shift+d), com Leader
+nnoremap <Leader>d :vsplit<CR>
+nnoremap <Leader>D :split<CR>
+
 " Netrw File Explorer Toggle (<Leader>e)
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
+let g:netrw_bufsettings = "noma nomod nu nornu nobl nowrap ro"
 nnoremap <Leader>e :Lexplore<CR>
 
 " --- Search Keybindings (Files & Text) ---
